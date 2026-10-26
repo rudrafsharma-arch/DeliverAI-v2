@@ -1,0 +1,100 @@
+{
+  "id": "cap-service-builder",
+  "name": "CAP Service Builder",
+  "description": "Generates complete CAP Cloud Application Programming model project including CDS entities, service definitions, handlers and mta.yaml for BTP deployment",
+  "version": "1.0.0",
+  "phase": "realize",
+  "category": "development",
+  "projectTypes": [
+    "s4hana-public",
+    "s4hana-private",
+    "s4hana-onprem",
+    "ecc",
+    "btp",
+    "oracle",
+    "workday",
+    "salesforce",
+    "custom"
+  ],
+  "icon": "☁️",
+  "color": "#0891B2",
+  "inputs": {
+    "required": [
+      "projectName",
+      "processName",
+      "description"
+    ],
+    "optional": [
+      "client",
+      "sapSystem",
+      "module",
+      "preparedBy",
+      "version"
+    ],
+    "fromAgents": [
+      "blueprint",
+      "functional-spec",
+      "technical-spec"
+    ],
+    "fromContext": [
+      "projectName",
+      "requirements",
+      "interfaces"
+    ]
+  },
+  "outputs": {
+    "produces": "cap-service-{projectName}-{version}.html",
+    "contextKeys": [
+      "capModel",
+      "serviceDefinition",
+      "mtaYaml"
+    ]
+  },
+  "suggests": [
+    "iflow-builder",
+    "test-scripts"
+  ],
+  "model": "claude-sonnet-4-6",
+  "maxTokens": 8000,
+  "knowledge": [
+    "sap/btp-integration-best-practices.md",
+    "sap/sap-ai-stack.md",
+    "general/responsible-ai.md"
+  ],
+  "tags": [
+    "cap",
+    "cds",
+    "odata",
+    "btp",
+    "nodejs",
+    "development",
+    "realize"
+  ],
+  "requiredConnections": [
+    "claude",
+    "btp"
+  ],
+  "connectionDetails": [
+    {
+      "label": "Claude Code CLI",
+      "icon": "🤖",
+      "required": true,
+      "envKeys": [
+        "GIT_BASH_PATH",
+        "CLAUDE_PATH",
+        "AI_ENGINE"
+      ]
+    },
+    {
+      "label": "SAP BTP",
+      "icon": "☁️",
+      "required": false,
+      "envKeys": [
+        "BTP_TOKEN_URL",
+        "BTP_CLIENT_ID",
+        "BTP_CLIENT_SECRET",
+        "BTP_CPI_HOST"
+      ]
+    }
+  ]
+}

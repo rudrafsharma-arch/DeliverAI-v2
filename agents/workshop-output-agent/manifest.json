@@ -1,0 +1,8 @@
+{
+  "id": "workshop-output-agent",
+  "name": "Workshop Output Agent",
+  "description": "Generates fit-to-standard workshop outputs, minutes and action items",
+  "phase": "explore",
+  "inputs": {"fields": ["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents": ["blueprint"]},
+  "output": {"type": "html","filename": "workshop-output"}
+}

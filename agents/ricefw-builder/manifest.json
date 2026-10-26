@@ -1,0 +1,82 @@
+{
+  "id": "ricefw-builder",
+  "name": "RICEFW Builder",
+  "description": "Generates complete RICEFW register and individual specs for Reports, Interfaces, Conversions, Enhancements, Forms and Workflows",
+  "version": "1.0.0",
+  "phase": "realize",
+  "category": "documentation",
+  "projectTypes": [
+    "s4hana-public",
+    "s4hana-private",
+    "s4hana-onprem",
+    "ecc",
+    "btp",
+    "oracle",
+    "workday",
+    "salesforce",
+    "custom"
+  ],
+  "icon": "📊",
+  "color": "#7d6608",
+  "inputs": {
+    "required": [
+      "projectName",
+      "description"
+    ],
+    "optional": [
+      "client",
+      "sapSystem",
+      "module",
+      "preparedBy",
+      "version"
+    ],
+    "fromAgents": [
+      "blueprint",
+      "functional-spec"
+    ],
+    "fromContext": [
+      "projectName",
+      "client",
+      "requirements"
+    ]
+  },
+  "outputs": {
+    "produces": "ricefw-{projectName}-{version}.html",
+    "contextKeys": [
+      "ricefwRegister",
+      "devObjects"
+    ]
+  },
+  "suggests": [
+    "technical-spec",
+    "abap-generator"
+  ],
+  "model": "claude-sonnet-4-6",
+  "maxTokens": 8000,
+  "knowledge": [
+    "sap/abap-standards.md",
+    "sap/rap-restful-abap.md",
+    "general/responsible-ai.md"
+  ],
+  "tags": [
+    "ricefw",
+    "abap",
+    "development",
+    "realize"
+  ],
+  "requiredConnections": [
+    "claude"
+  ],
+  "connectionDetails": [
+    {
+      "label": "Claude Code CLI",
+      "icon": "🤖",
+      "required": true,
+      "envKeys": [
+        "GIT_BASH_PATH",
+        "CLAUDE_PATH",
+        "AI_ENGINE"
+      ]
+    }
+  ]
+}

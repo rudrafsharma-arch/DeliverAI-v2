@@ -1,0 +1,8 @@
+{
+  "id": "ai-usecases-agent",
+  "name": "AI Use Cases Agent",
+  "description": "Identifies and documents AI and Joule use cases for SAP S/4HANA and BTP implementations",
+  "phase": "discover",
+  "inputs": {"fields": ["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents": []},
+  "output": {"type": "html","filename": "ai-usecases"}
+}

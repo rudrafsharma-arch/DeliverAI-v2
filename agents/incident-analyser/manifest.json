@@ -1,0 +1,82 @@
+{
+  "id": "incident-analyser",
+  "name": "Incident Analyser",
+  "description": "Analyses P1-P4 AMS incidents, generates Root Cause Analysis and fix recommendations with step-by-step resolution guide",
+  "version": "1.0.0",
+  "phase": "run",
+  "category": "ams",
+  "projectTypes": [
+    "s4hana-public",
+    "s4hana-private",
+    "s4hana-onprem",
+    "ecc",
+    "btp",
+    "oracle",
+    "workday",
+    "salesforce",
+    "custom"
+  ],
+  "icon": "🚨",
+  "color": "#7b241c",
+  "inputs": {
+    "required": [
+      "projectName",
+      "incidentDescription",
+      "priority"
+    ],
+    "optional": [
+      "client",
+      "sapSystem",
+      "module",
+      "errorMessage",
+      "stepsToReproduce",
+      "systemLog"
+    ],
+    "fromAgents": [],
+    "fromContext": [
+      "projectName",
+      "client",
+      "systemDetails"
+    ]
+  },
+  "outputs": {
+    "produces": "rca-{projectName}-{version}.html",
+    "contextKeys": [
+      "rootCause",
+      "resolution",
+      "preventionMeasures"
+    ]
+  },
+  "suggests": [
+    "change-request",
+    "config-doc"
+  ],
+  "model": "claude-sonnet-4-6",
+  "maxTokens": 8000,
+  "knowledge": [
+    "sap/activate-methodology.md",
+    "general/responsible-ai.md"
+  ],
+  "tags": [
+    "incident",
+    "rca",
+    "ams",
+    "run",
+    "support"
+  ],
+  "requiredConnections": [
+    "claude"
+  ],
+  "connectionDetails": [
+    {
+      "label": "Claude Code CLI",
+      "icon": "🤖",
+      "required": true,
+      "envKeys": [
+        "GIT_BASH_PATH",
+        "CLAUDE_PATH",
+        "AI_ENGINE"
+      ]
+    }
+  ]
+}

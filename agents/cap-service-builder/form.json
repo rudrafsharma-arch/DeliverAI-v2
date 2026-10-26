@@ -1,0 +1,53 @@
+{
+  "fields": [
+    {
+      "id": "projectName",
+      "label": "Project Name *",
+      "type": "text",
+      "required": true,
+      "placeholder": "e.g. Mars Procurement Portal"
+    },
+    {
+      "id": "client",
+      "label": "Client / Company",
+      "type": "text",
+      "placeholder": "e.g. Mars Health and Wellness"
+    },
+    {
+      "id": "sapSystem",
+      "label": "BTP Subaccount",
+      "type": "text",
+      "placeholder": "e.g. Mars-BTP-Prod"
+    },
+    {
+      "id": "module",
+      "label": "Domain / Module",
+      "type": "text",
+      "placeholder": "e.g. Procurement, Finance, HR"
+    },
+    {
+      "id": "processName",
+      "label": "Service Name *",
+      "type": "text",
+      "required": true,
+      "placeholder": "e.g. InvoiceService, PurchaseOrderService"
+    },
+    {
+      "id": "preparedBy",
+      "label": "Prepared By",
+      "type": "text"
+    },
+    {
+      "id": "version",
+      "label": "Version",
+      "type": "text"
+    },
+    {
+      "id": "description",
+      "label": "Description *",
+      "type": "textarea",
+      "required": true,
+      "placeholder": "Describe the CAP service requirements, entities, business logic, S4HANA integration points, and BTP services needed..."
+    }
+  ]
+}

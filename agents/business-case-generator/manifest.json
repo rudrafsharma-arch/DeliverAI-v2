@@ -1,0 +1,11 @@
+{
+  "id": "business-case-generator",
+  "name": "Business Case Generator",
+  "description": "Generates a comprehensive SAP business case with ROI analysis, cost-benefit, and executive summary",
+  "phase": "discover",
+  "inputs": {
+    "fields": ["projectName", "client", "industry", "requirement", "systemLandscape", "budget", "timeline"],
+    "fromAgents": []
+  },
+  "output": { "type": "html", "filename": "business-case" }
+}

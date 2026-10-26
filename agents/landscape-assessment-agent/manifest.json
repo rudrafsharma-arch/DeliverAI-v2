@@ -1,0 +1,1 @@
+{"id":"landscape-assessment-agent","name":"Landscape Assessment Agent","description":"Generates SAP system landscape assessment and technical architecture review","phase":"discover","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":[]},"output":{"type":"html","filename":"landscape-assessment"}}

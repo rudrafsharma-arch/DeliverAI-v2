@@ -1,0 +1,1 @@
+{"id":"ci-improvement-agent","name":"Continuous Improvement Agent","description":"Generates SAP AMS continuous improvement backlog and roadmap","phase":"run","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":[]},"output":{"type":"html","filename":"ci-improvement"}}

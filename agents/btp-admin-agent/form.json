@@ -1,0 +1,76 @@
+{
+  "sections": [
+    {
+      "title": "Admin Task",
+      "fields": [
+        {
+          "key": "task",
+          "label": "What do you need to do?",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Full Platform Assessment — Check what is provisioned and what is missing",
+            "Provision Integration Suite — Subscribe and configure Integration Suite",
+            "Setup IDP / SSO — Configure Identity Provider and Single Sign-On",
+            "Create Service Instance — Create and configure a BTP service instance",
+            "Generate Service Key — Create service key and extract credentials",
+            "Setup CF Environment — Create Cloud Foundry org, space, and roles",
+            "Configure Entitlements — Assign service entitlements to subaccount",
+            "Setup Security — Configure roles, role collections, and trust configuration",
+            "Deploy iFlow — Deploy Integration Suite iFlow to runtime",
+            "Full Onboarding — Complete BTP setup from scratch for a new project",
+            "Health Check — Check all services, certificates, and expiry dates",
+            "Custom Task"
+          ]
+        },
+        {
+          "key": "customTask",
+          "label": "Custom Task (if selected above)",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Describe exactly what you need done on BTP..."
+        }
+      ]
+    },
+    {
+      "title": "Context",
+      "fields": [
+        {
+          "key": "projectName",
+          "label": "Project Name",
+          "type": "text",
+          "required": false,
+          "placeholder": "e.g. Mars S/4HANA Implementation"
+        },
+        {
+          "key": "client",
+          "label": "Client",
+          "type": "text",
+          "required": false,
+          "placeholder": "e.g. Mars Inc."
+        },
+        {
+          "key": "region",
+          "label": "BTP Region",
+          "type": "select",
+          "required": false,
+          "options": ["AP21 - Singapore (Azure)", "US10 - US East (AWS)", "EU10 - Europe (AWS)", "EU20 - Europe (Azure)", "AP10 - Australia (AWS)", "Custom"]
+        },
+        {
+          "key": "environment",
+          "label": "Environment",
+          "type": "select",
+          "required": false,
+          "options": ["Development", "Quality/Test", "Production", "Sandbox/Trial"]
+        },
+        {
+          "key": "targetServices",
+          "label": "Target Services (optional)",
+          "type": "text",
+          "required": false,
+          "placeholder": "e.g. Integration Suite, HANA Cloud, SAP Build Apps"
+        }
+      ]
+    }
+  ]
+}

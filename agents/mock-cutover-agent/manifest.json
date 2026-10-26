@@ -1,0 +1,1 @@
+{"id":"mock-cutover-agent","name":"Mock Cutover Agent","description":"Generates mock cutover results and lessons learned report","phase":"deploy","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":["cutover-plan-agent"]},"output":{"type":"html","filename":"mock-cutover"}}

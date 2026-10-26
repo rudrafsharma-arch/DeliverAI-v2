@@ -1,0 +1,1 @@
+{"id":"decision-log-agent","name":"Decision Log Agent","description":"Generates project design decision log and architecture decision records","phase":"explore","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":["blueprint","solution-design-agent"]},"output":{"type":"html","filename":"decision-log"}}

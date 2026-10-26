@@ -1,0 +1,46 @@
+{
+  "fields": [
+    {
+      "id": "projectName",
+      "label": "Project Name *",
+      "type": "text",
+      "required": true,
+      "placeholder": "e.g. Accenture S/4HANA Migration"
+    },
+    {
+      "id": "client",
+      "label": "Client / Company",
+      "type": "text",
+      "placeholder": "e.g. Mars Health and Wellness"
+    },
+    {
+      "id": "sapSystem",
+      "label": "System / Platform",
+      "type": "text",
+      "placeholder": "e.g. SAP S/4HANA"
+    },
+    {
+      "id": "module",
+      "label": "Module / Domain",
+      "type": "text",
+      "placeholder": "e.g. FI, MM"
+    },
+    {
+      "id": "processName",
+      "label": "Process / Topic *",
+      "type": "text",
+      "required": true,
+      "placeholder": "e.g. Vendor Payment Configuration"
+    },
+    {
+      "id": "preparedBy",
+      "label": "Prepared By",
+      "type": "text"
+    },
+    {
+      "id": "version",
+      "label": "Version",
+      "type": "text"
+    }
+  ]
+}

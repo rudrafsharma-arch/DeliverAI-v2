@@ -1,0 +1,1 @@
+{"id":"unit-test-evidence-agent","name":"Unit Test Evidence Agent","description":"Generates unit test evidence templates and results documentation","phase":"realize","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":["functional-spec","technical-spec"]},"output":{"type":"html","filename":"unit-test-evidence"}}

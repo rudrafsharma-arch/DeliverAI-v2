@@ -1,0 +1,36 @@
+{
+  "sections": [
+    {
+      "title": "Project Overview",
+      "fields": [
+        { "name": "projectName", "label": "Project Name", "type": "text", "required": true, "placeholder": "e.g. Mars S/4HANA Migration" },
+        { "name": "client", "label": "Client / Company", "type": "text", "required": false, "placeholder": "e.g. Mars Health and Wellness" },
+        { "name": "industry", "label": "Industry", "type": "select", "required": false, "options": ["Manufacturing", "Retail", "Financial Services", "Healthcare/Pharma", "Public Sector", "Energy/Utilities", "Telecom", "Professional Services", "Other"] },
+        { "name": "preparedBy", "label": "Prepared By", "type": "text", "required": false, "placeholder": "e.g. Vikram Sharma", "default": "Vikram Sharma" }
+      ]
+    },
+    {
+      "title": "Requirement",
+      "fields": [
+        { "name": "requirement", "label": "What do you need to deliver?", "type": "textarea", "required": true, "placeholder": "e.g. We need to migrate Mars from ECC to S/4HANA Public Cloud and integrate with Blue Yonder WMS for warehouse management. The client has BTP already licensed but not fully utilised.", "rows": 6 },
+        { "name": "systemLandscape", "label": "Current System Landscape", "type": "textarea", "required": true, "placeholder": "e.g. ECC 6.0 EHP8, BTP Trial, Blue Yonder WMS, Salesforce CRM", "rows": 3 }
+      ]
+    },
+    {
+      "title": "Constraints",
+      "fields": [
+        { "name": "existingLicenses", "label": "Existing SAP Licenses", "type": "textarea", "required": false, "placeholder": "e.g. S/4HANA Public Cloud, BTP Integration Suite, SAC", "rows": 2 },
+        { "name": "budget", "label": "Budget Range", "type": "select", "required": false, "options": ["Under £500k", "£500k - £1m", "£1m - £2m", "£2m - £5m", "£5m - £10m", "Over £10m", "Not defined"] },
+        { "name": "timeline", "label": "Target Go-Live", "type": "text", "required": false, "placeholder": "e.g. 18 months, Q4 2026" },
+        { "name": "teamSize", "label": "Team Size", "type": "select", "required": false, "options": ["Small (1-5)", "Medium (6-15)", "Large (16-30)", "Enterprise (30+)"] }
+      ]
+    },
+    {
+      "title": "Delivery Options",
+      "fields": [
+        { "name": "deliveryPackage", "label": "What to deliver", "type": "multiselect", "required": false, "options": ["Full Delivery Package", "Architecture Only", "HLD Only", "HLD + LLD", "Agent Plan Only", "Cost Analysis Only"], "default": "Full Delivery Package" },
+        { "name": "version", "label": "Version", "type": "text", "required": false, "placeholder": "1.0", "default": "1.0" }
+      ]
+    }
+  ]
+}

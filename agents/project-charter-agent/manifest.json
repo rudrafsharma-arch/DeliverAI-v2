@@ -1,0 +1,11 @@
+{
+  "id": "project-charter-agent",
+  "name": "Project Charter Agent",
+  "description": "Generates a comprehensive SAP project charter with governance, RACI, and project framework",
+  "phase": "prepare",
+  "inputs": {
+    "fields": ["projectName", "client", "industry", "requirement", "systemLandscape", "budget", "timeline"],
+    "fromAgents": ["architect"]
+  },
+  "output": { "type": "html", "filename": "project-charter" }
+}

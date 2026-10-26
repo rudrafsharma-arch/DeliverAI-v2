@@ -1,0 +1,1 @@
+{"id":"root-cause-analysis-agent","name":"Root Cause Analysis Agent","description":"Generates RCA report for SAP P1/P2 incidents","phase":"run","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":["incident-analyser"]},"output":{"type":"html","filename":"root-cause-analysis"}}

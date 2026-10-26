@@ -1,0 +1,1 @@
+{"id":"knowledge-transfer-agent","name":"Knowledge Transfer Agent","description":"Generates knowledge transfer documentation for SAP support handover","phase":"run","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":[]},"output":{"type":"html","filename":"knowledge-transfer"}}

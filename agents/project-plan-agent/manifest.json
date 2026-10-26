@@ -1,0 +1,1 @@
+{"id":"project-plan-agent","name":"Project Plan Agent","description":"Generates integrated SAP project plan with phases, milestones and workstreams","phase":"prepare","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":["project-charter-agent"]},"output":{"type":"html","filename":"project-plan"}}

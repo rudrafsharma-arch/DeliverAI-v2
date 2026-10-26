@@ -1,0 +1,1 @@
+{"id":"change-request-agent","name":"Change Request Agent","description":"Generates SAP change request documentation and impact assessment","phase":"run","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":[]},"output":{"type":"html","filename":"change-request"}}

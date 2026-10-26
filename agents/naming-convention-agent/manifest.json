@@ -1,0 +1,1 @@
+{"id":"naming-convention-agent","name":"Naming Convention Agent","description":"Generates SAP naming conventions and development standards document","phase":"prepare","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":[]},"output":{"type":"html","filename":"naming-conventions"}}

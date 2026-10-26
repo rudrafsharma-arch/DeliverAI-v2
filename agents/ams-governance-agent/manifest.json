@@ -1,0 +1,8 @@
+{
+  "id": "ams-governance-agent",
+  "name": "AMS Governance Agent",
+  "description": "Generates AMS governance model, SLA framework and support procedures",
+  "phase": "run",
+  "inputs": {"fields": ["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents": []},
+  "output": {"type": "html","filename": "ams-governance"}
+}

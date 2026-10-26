@@ -1,0 +1,11 @@
+{
+  "id": "cutover-plan-agent",
+  "name": "Cutover Plan Agent",
+  "description": "Generates a comprehensive SAP go-live cutover plan and runbook",
+  "phase": "deploy",
+  "inputs": {
+    "fields": ["projectName", "client", "industry", "requirement", "systemLandscape", "budget", "timeline"],
+    "fromAgents": ["architect", "blueprint"]
+  },
+  "output": { "type": "html", "filename": "cutover-plan" }
+}

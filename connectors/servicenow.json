@@ -1,0 +1,15 @@
+{
+  "id": "servicenow",
+  "name": "ServiceNow",
+  "type": "rest",
+  "description": "ServiceNow ITSM - read/create tickets",
+  "icon": "🎫",
+  "authType": "basic",
+  "fields": [
+    { "key": "SNOW_INSTANCE", "label": "Instance URL", "placeholder": "your-instance.service-now.com" },
+    { "key": "SNOW_USERNAME", "label": "Username", "placeholder": "admin" },
+    { "key": "SNOW_PASSWORD", "label": "Password", "placeholder": "", "secret": true }
+  ],
+  "capabilities": ["read", "write"],
+  "systems": ["ITSM"]
+}

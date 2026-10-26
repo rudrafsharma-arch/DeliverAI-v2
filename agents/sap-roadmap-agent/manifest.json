@@ -1,0 +1,8 @@
+{
+  "id": "sap-roadmap-agent",
+  "name": "SAP Roadmap Agent",
+  "description": "Generates a strategic SAP transformation roadmap with phases, milestones and investment plan",
+  "phase": "discover",
+  "inputs": {"fields": ["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents": []},
+  "output": {"type": "html","filename": "sap-roadmap"}
+}

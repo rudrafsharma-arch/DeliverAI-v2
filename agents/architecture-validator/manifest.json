@@ -1,0 +1,53 @@
+{
+  "id": "architecture-validator",
+  "name": "Architecture Validator",
+  "description": "Architecture Validator — validates against SAP standards",
+  "phase": "realize",
+  "inputs": {
+    "fields": [
+      "projectName",
+      "client",
+      "systemLandscape"
+    ],
+    "fromAgents": [
+      "architect"
+    ]
+  },
+  "output": {
+    "type": "html",
+    "filename": "architecture-validator"
+  },
+  "form": {
+    "fields": [
+      {
+        "id": "projectName",
+        "label": "Project Name",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "client",
+        "label": "Client",
+        "type": "text"
+      },
+      {
+        "id": "systemLandscape",
+        "label": "System Landscape",
+        "type": "text",
+        "placeholder": "e.g. S/4HANA 2023, BTP Integration Suite"
+      },
+      {
+        "id": "description",
+        "label": "Notes",
+        "type": "textarea",
+        "placeholder": "Known concerns, specific areas to focus on..."
+      },
+      {
+        "id": "packages",
+        "label": "Packages and iFlows to Validate",
+        "type": "packages",
+        "required": true
+      }
+    ]
+  }
+}

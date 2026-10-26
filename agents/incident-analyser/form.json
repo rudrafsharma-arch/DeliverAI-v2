@@ -1,0 +1,65 @@
+{
+  "fields": [
+    {
+      "id": "projectName",
+      "label": "Project Name *",
+      "type": "text",
+      "required": true,
+      "placeholder": "e.g. Mars AMS Support"
+    },
+    {
+      "id": "client",
+      "label": "Client / Company",
+      "type": "text",
+      "placeholder": "e.g. Mars Health and Wellness"
+    },
+    {
+      "id": "sapSystem",
+      "label": "System Affected",
+      "type": "text",
+      "placeholder": "e.g. SAP S/4HANA PRD"
+    },
+    {
+      "id": "module",
+      "label": "Module Affected",
+      "type": "text",
+      "placeholder": "e.g. FI, MM, BTP Integration"
+    },
+    {
+      "id": "priority",
+      "label": "Priority *",
+      "type": "text",
+      "required": true,
+      "placeholder": "P1, P2, P3 or P4"
+    },
+    {
+      "id": "incidentDescription",
+      "label": "Incident Description *",
+      "type": "textarea",
+      "required": true,
+      "placeholder": "Describe the issue, what happened, when it started, who is affected..."
+    },
+    {
+      "id": "errorMessage",
+      "label": "Error Message",
+      "type": "textarea",
+      "placeholder": "Paste the exact error message from SAP..."
+    },
+    {
+      "id": "stepsToReproduce",
+      "label": "Steps to Reproduce",
+      "type": "textarea",
+      "placeholder": "Step 1: Go to T-code XXX, Step 2: Enter values..."
+    },
+    {
+      "id": "preparedBy",
+      "label": "Prepared By",
+      "type": "text"
+    },
+    {
+      "id": "version",
+      "label": "Version",
+      "type": "text"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "architect",
+  "name": "Solution Architect",
+  "description": "Analyses requirements, designs solution architecture, selects and orchestrates specialist agents as subagents, creates new agents at runtime, and delivers complete project packages",
+  "version": "1.0.0",
+  "phase": "discover",
+  "category": "orchestrator",
+  "isOrchestrator": true,
+  "canCreateAgents": true,
+  "canSpawnSubagents": true,
+  "icon": "🏗️",
+  "color": "#1e40af",
+  "projectTypes": [
+    "s4hana-public",
+    "s4hana-private", 
+    "s4hana-onprem",
+    "ecc",
+    "btp",
+    "oracle",
+    "workday",
+    "salesforce",
+    "custom"
+  ],
+  "inputs": {
+    "required": ["projectName", "requirement", "systemLandscape"],
+    "optional": ["client", "budget", "timeline", "existingLicenses", "teamSize", "industry", "preparedBy"]
+  },
+  "outputs": {
+    "produces": "architect_plan_{projectName}.html",
+    "contextKeys": ["architecturePlan", "selectedAgents", "systemDecisions", "costAnalysis", "runtimeAgents"]
+  },
+  "knowledge": [
+    "sap/activate-methodology.md",
+    "sap/btp-integration-best-practices.md",
+    "sap/abap-coding-standards.md",
+    "sap/rap-guide.md",
+    "sap/sap-ai-stack.md"
+  ],
+  "requiredConnections": ["claude"],
+  "tags": ["orchestrator", "architect", "planning", "discover"]
+}

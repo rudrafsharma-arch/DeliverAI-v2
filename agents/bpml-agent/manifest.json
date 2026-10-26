@@ -1,0 +1,1 @@
+{"id":"bpml-agent","name":"BPML Agent","description":"Generates Business Process Master List for SAP implementation scope","phase":"explore","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":["blueprint"]},"output":{"type":"html","filename":"bpml"}}

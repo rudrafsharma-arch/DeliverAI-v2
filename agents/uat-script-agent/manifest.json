@@ -1,0 +1,8 @@
+{
+  "id": "uat-script-agent",
+  "name": "UAT Script Agent",
+  "description": "Generates comprehensive UAT test scripts for SAP business processes",
+  "phase": "realize",
+  "inputs": {"fields": ["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents": ["functional-spec","test-scripts"]},
+  "output": {"type": "html","filename": "uat-scripts"}
+}

@@ -1,0 +1,1 @@
+{"id":"service-review-agent","name":"Service Review Agent","description":"Generates monthly SAP AMS service review deck and performance report","phase":"run","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":[]},"output":{"type":"html","filename":"service-review"}}

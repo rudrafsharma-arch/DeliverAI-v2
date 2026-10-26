@@ -1,0 +1,8 @@
+{
+  "id": "estimation-agent",
+  "name": "Estimation Agent",
+  "description": "Generates detailed SAP project effort estimates and resource plans",
+  "phase": "discover",
+  "inputs": {"fields": ["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents": []},
+  "output": {"type": "html","filename": "effort-estimate"}
+}

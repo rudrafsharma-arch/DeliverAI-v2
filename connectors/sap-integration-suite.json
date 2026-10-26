@@ -1,0 +1,15 @@
+{
+  "id": "sap-integration-suite",
+  "name": "SAP Integration Suite",
+  "type": "mcp",
+  "description": "SAP Integration Suite iFlow management",
+  "icon": "🔄",
+  "authType": "oauth",
+  "fields": [
+    { "key": "IS_URL", "label": "Integration Suite URL", "placeholder": "https://your-tenant.it-cpi.cfapps.eu10.hana.ondemand.com" },
+    { "key": "IS_CLIENT_ID", "label": "Client ID", "placeholder": "" },
+    { "key": "IS_CLIENT_SECRET", "label": "Client Secret", "placeholder": "", "secret": true }
+  ],
+  "capabilities": ["deploy", "read", "execute"],
+  "systems": ["BTP", "Integration"]
+}

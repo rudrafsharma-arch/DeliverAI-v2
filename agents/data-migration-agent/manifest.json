@@ -1,0 +1,11 @@
+{
+  "id": "data-migration-agent",
+  "name": "Data Migration Agent",
+  "description": "Generates a comprehensive SAP data migration strategy and object specification",
+  "phase": "realize",
+  "inputs": {
+    "fields": ["projectName", "client", "industry", "requirement", "systemLandscape", "budget", "timeline"],
+    "fromAgents": ["blueprint", "functional-spec"]
+  },
+  "output": { "type": "html", "filename": "data-migration" }
+}

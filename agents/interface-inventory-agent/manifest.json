@@ -1,0 +1,1 @@
+{"id":"interface-inventory-agent","name":"Interface Inventory Agent","description":"Generates comprehensive SAP integration and interface catalogue","phase":"explore","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":["blueprint"]},"output":{"type":"html","filename":"interface-inventory"}}

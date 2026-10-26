@@ -1,0 +1,86 @@
+{
+  "id": "technical-spec",
+  "name": "Technical Specification",
+  "description": "Complete TS with development objects, RAP/ABAP, interfaces and transport strategy",
+  "version": "1.0.0",
+  "phase": "realize",
+  "category": "documentation",
+  "projectTypes": [
+    "s4hana-public",
+    "s4hana-private",
+    "s4hana-onprem",
+    "ecc",
+    "btp",
+    "oracle",
+    "workday",
+    "salesforce",
+    "custom"
+  ],
+  "icon": "⚙️",
+  "color": "#7d6608",
+  "inputs": {
+    "required": [
+      "projectName",
+      "processName",
+      "description"
+    ],
+    "optional": [
+      "client",
+      "sapSystem",
+      "module",
+      "preparedBy",
+      "version"
+    ],
+    "fromAgents": [
+      "blueprint",
+      "functional-spec"
+    ],
+    "fromContext": [
+      "projectName",
+      "client",
+      "systemDetails",
+      "requirements",
+      "fieldMappings",
+      "businessRules"
+    ]
+  },
+  "outputs": {
+    "produces": "technical-spec_{projectName}_{version}.html",
+    "contextKeys": [
+      "devObjects",
+      "interfaces",
+      "errorHandling"
+    ]
+  },
+  "suggests": [
+    "test-scripts",
+    "config-doc"
+  ],
+  "model": "claude-sonnet-4-6",
+  "maxTokens": 8000,
+  "knowledge": [
+    "sap/abap-standards.md",
+    "sap/rap-restful-abap.md",
+    "sap/btp-integration-best-practices.md"
+  ],
+  "tags": [
+    "document",
+    "technical",
+    "realize"
+  ],
+  "requiredConnections": [
+    "claude"
+  ],
+  "connectionDetails": [
+    {
+      "label": "Claude Code CLI",
+      "icon": "🤖",
+      "required": true,
+      "envKeys": [
+        "GIT_BASH_PATH",
+        "CLAUDE_PATH",
+        "AI_ENGINE"
+      ]
+    }
+  ]
+}

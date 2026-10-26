@@ -1,0 +1,81 @@
+{
+  "id": "config-doc",
+  "name": "Configuration Document",
+  "description": "Step-by-step configuration with transaction codes, parameters and rollback procedure",
+  "version": "1.0.0",
+  "phase": "realize",
+  "category": "documentation",
+  "projectTypes": [
+    "s4hana-public",
+    "s4hana-private",
+    "s4hana-onprem",
+    "ecc",
+    "btp",
+    "oracle",
+    "workday",
+    "salesforce",
+    "custom"
+  ],
+  "icon": "🔧",
+  "color": "#7d6608",
+  "inputs": {
+    "required": [
+      "projectName",
+      "processName",
+      "description"
+    ],
+    "optional": [
+      "client",
+      "sapSystem",
+      "module",
+      "preparedBy",
+      "version"
+    ],
+    "fromAgents": [
+      "blueprint",
+      "functional-spec"
+    ],
+    "fromContext": [
+      "projectName",
+      "client",
+      "systemDetails",
+      "requirements"
+    ]
+  },
+  "outputs": {
+    "produces": "config-doc_{projectName}_{version}.html",
+    "contextKeys": [
+      "configSteps",
+      "parameters",
+      "transports"
+    ]
+  },
+  "suggests": [
+    "test-scripts"
+  ],
+  "model": "claude-sonnet-4-6",
+  "maxTokens": 8000,
+  "knowledge": [
+    "sap/activate-methodology.md"
+  ],
+  "tags": [
+    "document",
+    "configuration",
+    "realize"
+  ],
+  "requiredConnections": [
+    "claude"
+  ],
+  "connectionDetails": [
+    {
+      "label": "Claude Code CLI",
+      "icon": "🤖",
+      "required": true,
+      "envKeys": [
+        "GIT_BASH_PATH",
+        "CLAUDE_PATH",
+        "AI_ENGINE"
+      ]
+    }
+  ]
+}

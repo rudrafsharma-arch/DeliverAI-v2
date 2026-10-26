@@ -1,0 +1,16 @@
+{
+  "id": "sap-btp-admin",
+  "name": "SAP BTP Admin MCP",
+  "type": "mcp",
+  "description": "SAP BTP Administration via official MCP server",
+  "icon": "☁️",
+  "authType": "oauth",
+  "url": "https://sso.mcp.btp.cloud.sap/mcp",
+  "fields": [
+    { "key": "BTP_GLOBAL_ACCOUNT", "label": "Global Account Subdomain", "placeholder": "e.g. 8cede957trial-ga" },
+    { "key": "BTP_SUBACCOUNT_ID", "label": "Subaccount ID", "placeholder": "UUID" },
+    { "key": "BTP_USER", "label": "User Email", "placeholder": "your@email.com" }
+  ],
+  "capabilities": ["read", "write", "provision"],
+  "systems": ["BTP"]
+}

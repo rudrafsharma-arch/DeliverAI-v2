@@ -1,0 +1,1 @@
+{"id":"gap-analysis-agent","name":"Gap Analysis Agent","description":"Generates detailed SAP fit-gap analysis with delta design","phase":"explore","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":["blueprint","functional-spec"]},"output":{"type":"html","filename":"gap-analysis"}}

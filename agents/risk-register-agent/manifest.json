@@ -1,0 +1,8 @@
+{
+  "id": "risk-register-agent",
+  "name": "Risk Register Agent",
+  "description": "Generates a comprehensive SAP project risk register with mitigation strategies",
+  "phase": "prepare",
+  "inputs": {"fields": ["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents": ["architect"]},
+  "output": {"type": "html","filename": "risk-register"}
+}

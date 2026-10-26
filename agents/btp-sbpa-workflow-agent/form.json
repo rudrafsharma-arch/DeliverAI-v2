@@ -1,0 +1,59 @@
+{
+  "title": "BTP Build Process Automation Agent",
+  "fields": [
+    {
+      "name": "approverRoles",
+      "label": "Approver role / group",
+      "type": "text",
+      "required": true,
+      "placeholder": "e.g. Procurement Buyer Group - MARS"
+    },
+    {
+      "name": "qtyTolerance",
+      "label": "Quantity variance tolerance (%)",
+      "type": "number",
+      "required": true,
+      "placeholder": "5"
+    },
+    {
+      "name": "dateTolerance",
+      "label": "Delivery date deviation tolerance (days)",
+      "type": "number",
+      "required": true,
+      "placeholder": "3"
+    },
+    {
+      "name": "priceTolerance",
+      "label": "Price variance tolerance (%)",
+      "type": "number",
+      "required": true,
+      "placeholder": "2"
+    },
+    {
+      "name": "slaHours",
+      "label": "Buyer task SLA (hours)",
+      "type": "number",
+      "required": true,
+      "placeholder": "24"
+    },
+    {
+      "name": "escalationTarget",
+      "label": "Escalation target on SLA breach",
+      "type": "text",
+      "required": false,
+      "placeholder": "e.g. Buyer Team Lead"
+    },
+    {
+      "name": "notificationChannel",
+      "label": "Notification channel",
+      "type": "select",
+      "options": [
+        "My Inbox",
+        "Build Workzone",
+        "Email",
+        "All"
+      ],
+      "required": true
+    }
+  ]
+}

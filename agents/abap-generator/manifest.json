@@ -1,0 +1,85 @@
+{
+  "id": "abap-generator",
+  "name": "ABAP / RAP Generator",
+  "description": "Generates RAP-first ABAP code including CDS Views, Behaviour Definitions, Classes and Reports from Technical Spec",
+  "version": "1.0.0",
+  "phase": "realize",
+  "category": "development",
+  "projectTypes": [
+    "s4hana-public",
+    "s4hana-private",
+    "s4hana-onprem",
+    "ecc",
+    "btp",
+    "oracle",
+    "workday",
+    "salesforce",
+    "custom"
+  ],
+  "icon": "💻",
+  "color": "#0070F2",
+  "inputs": {
+    "required": [
+      "projectName",
+      "processName",
+      "description"
+    ],
+    "optional": [
+      "client",
+      "sapSystem",
+      "module",
+      "preparedBy",
+      "version",
+      "objectType"
+    ],
+    "fromAgents": [
+      "technical-spec",
+      "functional-spec"
+    ],
+    "fromContext": [
+      "projectName",
+      "devObjects",
+      "requirements"
+    ]
+  },
+  "outputs": {
+    "produces": "abap-code-{projectName}-{version}.html",
+    "contextKeys": [
+      "abapCode",
+      "cdxViews",
+      "behaviourDefinition"
+    ]
+  },
+  "suggests": [
+    "test-scripts"
+  ],
+  "model": "claude-sonnet-4-6",
+  "maxTokens": 8000,
+  "knowledge": [
+    "sap/abap-standards.md",
+    "sap/rap-restful-abap.md",
+    "general/responsible-ai.md"
+  ],
+  "tags": [
+    "abap",
+    "rap",
+    "cds",
+    "development",
+    "realize"
+  ],
+  "requiredConnections": [
+    "claude"
+  ],
+  "connectionDetails": [
+    {
+      "label": "Claude Code CLI",
+      "icon": "🤖",
+      "required": true,
+      "envKeys": [
+        "GIT_BASH_PATH",
+        "CLAUDE_PATH",
+        "AI_ENGINE"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "id": "iflow-builder",
+  "name": "iFlow Builder",
+  "description": "Generates complete iFlow XML, Groovy scripts and Interface Design Document for SAP BTP Integration Suite",
+  "version": "1.0.0",
+  "phase": "realize",
+  "category": "development",
+  "projectTypes": [
+    "s4hana-public",
+    "s4hana-private",
+    "s4hana-onprem",
+    "ecc",
+    "btp",
+    "oracle",
+    "workday",
+    "salesforce",
+    "custom"
+  ],
+  "icon": "ðŸ”—",
+  "color": "#0070F2",
+  "inputs": {
+    "required": [
+      "projectName",
+      "sourceSystem",
+      "targetSystem",
+      "processName",
+      "description"
+    ],
+    "optional": [
+      "client",
+      "adapterType",
+      "messageFormat",
+      "preparedBy",
+      "version"
+    ],
+    "fromAgents": [
+      "blueprint",
+      "functional-spec"
+    ],
+    "fromContext": [
+      "projectName",
+      "client",
+      "integrations"
+    ]
+  },
+  "outputs": {
+    "produces": "iflow-{projectName}-{version}.html",
+    "contextKeys": [
+      "interfaceDesign",
+      "iflowXml",
+      "groovyScripts"
+    ]
+  },
+  "suggests": [
+    "technical-spec",
+    "test-scripts",
+    "interface-design-doc"
+  ],
+  "model": "claude-sonnet-4-6",
+  "maxTokens": 8000,
+  "knowledge": [
+    "interfaces/btp-interface-catalogue.md"
+  ],
+  "tags": [
+    "integration",
+    "iflow",
+    "btp",
+    "cpi",
+    "development",
+    "realize"
+  ],
+  "requiredConnections": [
+    "claude",
+    "btp"
+  ],
+  "connectionDetails": [
+    {
+      "label": "Claude Code CLI",
+      "icon": "ðŸ¤–",
+      "required": true,
+      "envKeys": [
+        "GIT_BASH_PATH",
+        "CLAUDE_PATH",
+        "AI_ENGINE"
+      ]
+    },
+    {
+      "label": "SAP BTP",
+      "icon": "â˜ï¸",
+      "required": false,
+      "envKeys": [
+        "BTP_TOKEN_URL",
+        "BTP_CLIENT_ID",
+        "BTP_CLIENT_SECRET",
+        "BTP_CPI_HOST"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"id":"solution-design-agent","name":"Solution Design Agent","description":"Generates comprehensive SAP solution design document","phase":"explore","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":["blueprint","functional-spec"]},"output":{"type":"html","filename":"solution-design"}}

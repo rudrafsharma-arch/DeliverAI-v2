@@ -1,0 +1,1 @@
+{"id":"proposal-writer","name":"Proposal Writer","description":"Generates a professional SAP implementation proposal and Statement of Work","phase":"discover","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":[]},"output":{"type":"html","filename":"proposal"}}

@@ -1,0 +1,1 @@
+{"id":"sprint-review-agent","name":"Sprint Review Agent","description":"Generates sprint review notes and velocity reports for SAP Agile delivery","phase":"realize","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":[]},"output":{"type":"html","filename":"sprint-review"}}

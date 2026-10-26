@@ -1,0 +1,11 @@
+{
+  "id": "rfp-response-agent",
+  "name": "RFP Response Agent",
+  "description": "Generates a comprehensive RFP/RFI response for SAP implementation opportunities",
+  "phase": "discover",
+  "inputs": {
+    "fields": ["projectName", "client", "industry", "requirement", "systemLandscape", "budget", "timeline"],
+    "fromAgents": []
+  },
+  "output": { "type": "html", "filename": "rfp-response" }
+}

@@ -1,0 +1,86 @@
+{
+  "id": "test-scripts",
+  "name": "Test Scripts",
+  "description": "Complete Test Scripts and Test Cases for SIT/UAT with step-by-step instructions",
+  "version": "1.0.0",
+  "phase": "test",
+  "category": "documentation",
+  "projectTypes": [
+    "s4hana-public",
+    "s4hana-private",
+    "s4hana-onprem",
+    "ecc",
+    "btp",
+    "oracle",
+    "workday",
+    "salesforce",
+    "custom"
+  ],
+  "icon": "🧪",
+  "color": "#7b241c",
+  "inputs": {
+    "required": [
+      "projectName",
+      "processName",
+      "description"
+    ],
+    "optional": [
+      "client",
+      "sapSystem",
+      "module",
+      "preparedBy",
+      "version"
+    ],
+    "fromAgents": [
+      "blueprint",
+      "functional-spec",
+      "technical-spec"
+    ],
+    "fromContext": [
+      "projectName",
+      "client",
+      "systemDetails",
+      "requirements",
+      "fieldMappings",
+      "businessRules",
+      "devObjects"
+    ]
+  },
+  "outputs": {
+    "produces": "test-scripts_{projectName}_{version}.html",
+    "contextKeys": [
+      "testCases",
+      "testData",
+      "testResults"
+    ]
+  },
+  "suggests": [
+    "uat-signoff",
+    "defect-resolver"
+  ],
+  "model": "claude-sonnet-4-6",
+  "maxTokens": 8000,
+  "knowledge": [
+    "sap/activate-methodology.md"
+  ],
+  "tags": [
+    "document",
+    "testing",
+    "test"
+  ],
+  "requiredConnections": [
+    "claude"
+  ],
+  "connectionDetails": [
+    {
+      "label": "Claude Code CLI",
+      "icon": "🤖",
+      "required": true,
+      "envKeys": [
+        "GIT_BASH_PATH",
+        "CLAUDE_PATH",
+        "AI_ENGINE"
+      ]
+    }
+  ]
+}

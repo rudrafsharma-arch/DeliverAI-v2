@@ -1,0 +1,1 @@
+{"id":"integration-test-agent","name":"Integration Test Agent","description":"Generates integration test plan and results for SAP end-to-end scenarios","phase":"realize","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":["functional-spec","iflow-builder"]},"output":{"type":"html","filename":"integration-test"}}

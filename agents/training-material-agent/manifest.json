@@ -1,0 +1,1 @@
+{"id":"training-material-agent","name":"Training Material Agent","description":"Generates end-user training materials and quick reference guides for SAP","phase":"deploy","inputs":{"fields":["projectName","client","industry","requirement","systemLandscape","budget","timeline"],"fromAgents":["functional-spec","config-doc"]},"output":{"type":"html","filename":"training-material"}}

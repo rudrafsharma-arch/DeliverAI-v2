@@ -1,0 +1,15 @@
+{
+  "id": "github",
+  "name": "GitHub",
+  "type": "rest",
+  "description": "GitHub - sync documents and code",
+  "icon": "🐙",
+  "authType": "token",
+  "fields": [
+    { "key": "GITHUB_TOKEN", "label": "Personal Access Token", "placeholder": "ghp_...", "secret": true },
+    { "key": "GITHUB_USER", "label": "Username", "placeholder": "your-github-username" },
+    { "key": "DATA_REPO", "label": "Data Repository URL", "placeholder": "https://github.com/your-org/DeliverAI-data" }
+  ],
+  "capabilities": ["read", "write", "sync"],
+  "systems": ["GitHub"]
+}

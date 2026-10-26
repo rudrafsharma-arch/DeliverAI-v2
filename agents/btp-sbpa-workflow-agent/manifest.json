@@ -1,0 +1,16 @@
+{
+  "name": "BTP Build Process Automation Agent",
+  "id": "btp-sbpa-workflow-agent",
+  "version": "1.0.0",
+  "category": "BTP / Extension Suite",
+  "description": "Builds an SAP Build Process Automation (SBPA) workflow for PO Acknowledgement exception handling. When DOX confidence is low or confirmed values breach tolerance (quantity / date / price), a buyer task is raised with the extracted vs. PO values side-by-side. On approval the workflow calls back the Integration Suite iFlow to post the S/4 confirmation; on rejection it closes the item with a reason.",
+  "technology": "SAP Build Process Automation, Workzone/My Inbox, BTP Destinations",
+  "runtime": true,
+  "createdBy": "solution-architect",
+  "produces": [
+    "sbpa-process-definition.md",
+    "approval-form-ui.md",
+    "tolerance-rules.md",
+    "callback-api-contract.md"
+  ]
+}
