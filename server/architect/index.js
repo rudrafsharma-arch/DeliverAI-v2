@@ -1,4 +1,4 @@
-const { callAI } = require('../core/ai-engine');
+﻿const { callAI } = require('../core/ai-engine');
 const context = require('../core/context');
 const logger = require('../observability/logger');
 const db = require('../db');
@@ -9,45 +9,48 @@ const architectEmitter = new EventEmitter();
 const pendingQuestions = new Map();
 
 const SYSTEM_PROMPT = `You are the Architect of DeliverAI, an SAP delivery platform.
-You can run agents to take real actions.
 
-When the user wants something done (not just answered), respond with ONLY this JSON:
-{"action": "run_agent", "agentId": "btp-admin-agent", "task": "what to do", "reply": "what you tell the user"}
+Respond with JSON only. Two formats:
 
-When the user just wants information or a conversation, respond with ONLY this JSON:
-{"action": "none", "reply": "your response here"}
+1. For questions, information, advice - just answer:
+{"action": "none", "reply": "your answer here"}
 
-Agent IDs you can run:
-- btp-admin-agent: for anything on SAP BTP (services, subscriptions, roles, entitlements)
-- blueprint: generate Business Blueprint
+2. ONLY when user explicitly says "run", "execute", "do it", "create", "generate", "provision", "deploy" - trigger an agent:
+{"action": "run_agent", "agentId": "agent-id", "task": "what to do", "reply": "telling user what you are doing"}
+
+Available agents (only use when explicitly asked to run/execute/create/generate something):
+- btp-admin-agent: run BTP actions (provision, deploy, configure)
+- blueprint: generate Business Blueprint document
 - functional-spec: generate Functional Specification
-- technical-spec: generate Technical Specification  
-- estimation-agent: project estimation
-- risk-register-agent: risk register
-- incident-analyser: analyse SAP incidents
+- technical-spec: generate Technical Specification
+- estimation-agent: generate project estimation
+- risk-register-agent: generate risk register
+- incident-analyser: analyse an incident
 
-Rules:
-- ALWAYS respond with valid JSON only. No other text.
-- For BTP questions like services, subscriptions, roles -> use btp-admin-agent
-- Keep reply concise (1-2 sentences)`;
+For questions like "what services are on BTP?", "how does X work?", "what is Y?" -> action: none, just answer.
+For commands like "check BTP", "run the agent", "generate a blueprint" -> action: run_agent.
+
+Be concise. Max 2 sentences for replies. Keep JSON short.`;
 
 async function chat(message, projectId, conversationHistory) {
   logger.info('Architect: ' + message.substring(0, 50), { projectId, category: 'architect' });
   const history = (conversationHistory || []).slice(-4);
   const prompt = history.map(m => (m.role === 'user' ? 'Human' : 'Architect') + ': ' + m.content).join('\n') +
     '\nHuman: ' + message + '\nArchitect:';
-  const response = await callAI(prompt, SYSTEM_PROMPT, { maxTokens: 300 });
+  const response = await callAI(prompt, SYSTEM_PROMPT, { maxTokens: 1000 });
   const text = response.trim();
-  // Parse JSON response
   try {
     const clean = text.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
+    // Find JSON object
+    const start = clean.indexOf('{');
+    const end = clean.lastIndexOf('}');
+    if (start === -1 || end === -1) return { text: text || 'How can I help?' };
+    const parsed = JSON.parse(clean.substring(start, end + 1));
     if (parsed.action === 'run_agent') {
       return { text: parsed.reply || 'Running ' + parsed.agentId + '...', action: { type: 'run_agent', agentId: parsed.agentId, task: parsed.task } };
     }
     return { text: parsed.reply || text };
   } catch(e) {
-    // Not JSON - return as plain text
     return { text: text || 'How can I help?' };
   }
 }
@@ -64,8 +67,8 @@ async function planExecution(userGoal, projectId, availableAgents) {
 async function answerQuestion(question, projectId, agentId, confidenceThreshold) {
   const threshold = confidenceThreshold || parseInt(process.env.CONFIDENCE_THRESHOLD || '80');
   const projectContext = context.getAll(projectId || 'none');
-  const prompt = 'Agent ' + agentId + ' asks: "' + question + '"\nContext: ' + JSON.stringify(projectContext).substring(0, 300) + '\nCan you answer confidently? JSON: {"canAnswer": true/false, "confidence": 0-100, "answer": "...", "reason": "..."}';
-  const response = await callAI(prompt, SYSTEM_PROMPT, { maxTokens: 300 });
+  const prompt = 'Agent ' + agentId + ' asks: "' + question + '"\nContext: ' + JSON.stringify(projectContext).substring(0, 300) + '\nCan you answer? JSON: {"canAnswer": true/false, "confidence": 0-100, "answer": "...", "reason": "..."}';
+  const response = await callAI(prompt, SYSTEM_PROMPT, { maxTokens: 1000 });
   try {
     const clean = response.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
@@ -124,3 +127,5 @@ function getPendingQuestions(projectId) {
 }
 
 module.exports = { chat, planExecution, answerQuestion, createRuntimeAgent, analyzeDocumentDiff, askHuman, answerHumanQuestion, getPendingQuestions, architectEmitter };
+
+

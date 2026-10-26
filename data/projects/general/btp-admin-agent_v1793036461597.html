@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>List All Activated Services on SAP BTP Account – Draft Report</title>
+<style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:0;background:#f5f5f5;color:#333;}
+    header{background:#004080;color:#fff;padding:15px;}
+    h1{margin:0;font-size:1.8em;}
+    .container{max-width:1200px;margin:auto;padding:20px;background:#fff;}
+    h2{border-bottom:2px solid #004080;padding-bottom:5px;color:#004080;}
+    table{width:100%;border-collapse:collapse;margin-top:10px;}
+    th,td{border:1px solid #ccc;padding:8px;text-align:left;}
+    th{background:#004080;color:#fff;}
+    tr:nth-child(even){background:#f9f9f9;}
+    pre{background:#eaeaea;padding:10px;border-left:4px solid #004080;overflow:auto;}
+    .note{background:#fff8e1;border-left:4px solid #ffa000;padding:10px;margin:15px 0;}
+    footer{background:#004080;color:#fff;text-align:center;padding:10px;font-size:.9em;}
+</style>
+</head>
+<body>
+<header>
+<h1>List All Activated Services on SAP BTP Account – Draft Report</h1>
+</header>
+<div class="container">
+<section id="executive-summary">
+<h2>1. Executive Summary</h2>
+<p>This document provides a detailed, step‑by‑step guide to retrieve a comprehensive list of all activated (service‑instance) services in your SAP Business Technology Platform (BTP) account. It covers:</p>
+<ul>
+<li>Assessment of current activated services.</li>
+<li>Methods to retrieve the list via the BTP CLI and the BTP Accounts Service REST API.</li>
+<li>Verification steps to confirm that the data is accurate.</li>
+<li>Best‑practice recommendations for handling sensitive credentials.</li>
+<li>Potential troubleshooting tips.</li>
+</ul>
+<p>All examples are in <strong>DRAFT</strong> status and intended for a <strong>Production</strong> environment, but can be adapted to <strong>Trial</strong> or <strong>Sandbox</strong> settings by adjusting endpoint URLs and API scopes accordingly.</p>
+</section>
+
+<section id="current-state-assessment">
+<h2>2. Current State Assessment</h2>
+<p>Before proceeding, determine which sub‑account and tenant you are working with. In a typical BTP organization you may have:</p>
+<table>
+<tr><th>Element</th><th>Sample Value</th></tr>
+<tr><td>Global Account ID</td><td>8e5e6b2c-9c6d-4a23-9f1b-1c0d2e3f4a5b</td></tr>
+<tr><td>Sub‑Account ID</td><td>7f3a8b1c-2e5d-4f9c-8b2e-9a0c1d2f3e4b</td></tr>
+<tr><td>Region</td><td>eu10 (Frankfurt)</td></tr>
+<tr><td>Authentication Method</td><td>OAuth 2.0 client credentials (client ID + secret)</td></tr>
+</table>
+<p>Assuming you have already created a <code>service instance key</code> for the BTP Accounts Service API and have the following JSON structure:</p>
+<pre>{
+  "client_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "client_secret": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "subaccount_id": "7f3a8b1c-2e5d-4f9c-8b2e-9a0c1d2f3e4b",
+  "region": "eu10"
+}</pre>
+<p>With this key, you can retrieve the list of active services programmatically.</p>
+</section>
+
+<section id="action-plan">
+<h2>3. Action Plan</h2>
+<ol>
+<li>Obtain an OAuth 2.0 access token from the BTP Accounts Service.</li>
+<li>Call the <code>/v1/subaccount/{subaccountId}/service-instances</code> endpoint to fetch all service instances.</li>
+<li>Filter the results to those with <code>state: "ACTIVE"</code> or <code>plan: "PROD"</code> as required.</li>
+<li>Alternatively, use the BTP CLI <code>cf services</code> command for a quick local overview.</li>
+<li>Verify the returned data against your internal catalog.</li>
+</ol>
+</section>
+
+<section id="step-by-step-instructions">
+<h2>4. Step‑by‑Step Instructions</h2>
+
+<h3>4.1 Generate OAuth 2.0 Access Token (Client Credentials Grant)</h3>
+<p>Use the BTP Accounts Service token endpoint:</p>
+<pre>POST https://accounts.eu10.hanatrial.ondemand.com/api/token
+Headers:
+  Content-Type: application/x-www-form-urlencoded
+Body:
+  grant_type=client_credentials
+  client_id=&lt;client_id&gt;
+  client_secret=&lt;client_secret&gt;
+  scope=accounts.subaccount.read</pre>
+<p>Sample CURL command:</p>
+<pre>curl -X POST "https://accounts.eu10.hanatrial.ondemand.com/api/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=client_credentials" \
+  -d "client_id=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" \
+  -d "client_secret=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  -d "scope=accounts.subaccount.read" -s -o token.json</pre>
+<p>The <code>token.json</code> will contain:</p>
+<pre>{
+  "access_token":"eyJraWQiOiJr...",
+  "token_type":"Bearer",
+  "expires_in":3600
+}</pre>
+
+<h3>4.2 Call the Service Instances API</h3>
+<p>Endpoint:</p>
+<pre>GET https://accounts.eu10.hanatrial.ondemand.com/api/accounts/v1/subaccount/{subaccount_id}/service-instances?fields=id,service_name,plan,state,creation_time</pre>
+<p>Replace <code>{subaccount_id}</code> with your actual sub‑account ID.</p>
+<p>Sample CURL command:</p>
+<pre>curl -X GET "https://accounts.eu10.hanatrial.ondemand.com/api/accounts/v1/subaccount/7f3a8b1c-2e5d-4f9c-8b2e-9a0c1d2f3e4b/service-instances?fields=id,service_name,plan,state,creation_time" \
+  -H "Authorization: Bearer $(jq -r '.access_token' token.json)" \
+  -H "Accept: application/json" -s -o services.json</pre>
+
+<h3>4.3 Parse the Result</h3>
+<p>The <code>services.json</code> will be a JSON array. Use <code>jq</code> to filter active services:</p>
+<pre>jq '.[] | select(.state=="ACTIVE") | {id,service_name,plan,creation_time}' services.json</pre>
+<p>Example output:</p>
+<pre>{
+  "id":"ab12cd34-ef56-78gh-90ij-klmnopqrstuv",
+  "service_name":"HANA Cloud",
+  "plan":"PROD",
+  "creation_time":"2024-04-01T12:34:56Z"
+}
+{
+  "id":"cd34ef56-gh78-90ij-klmn-opqrstuvwx12",
+  "service_name":"Integration Suite",
+  "plan":"PROD",
+  "creation_time":"2024-02-15T08:22:10Z"
+}
+</pre>
+
+<h3>4.4 Alternative: BTP CLI</h3>
+<p>Log into the BTP CLI if you have it installed:</p>
+<pre>bx login -a https://accounts.eu10.hanatrial.ondemand.com/api/v1/accounts -s <subaccount-id>
+bx target -g <global-account-id> -s <subaccount-id></pre>
+<p>Then run:</p>
+<pre>cf services</pre>
+<p>or to get more detailed output:</p>
+<pre>cf services --json | jq '.[] | select(.state=="active") | {name,plan,type,space,state,created_at}'</pre>
+
+<h3>4.5 Export the List to CSV (Optional)</h3>
+<p>Using <code>jq</code> to format for CSV:</p>
+<pre>jq -r '.[] | select(.state=="ACTIVE") | [.id, .service_name, .plan, .creation_time] | @csv' services.json > services_active.csv</pre>
+
+<h3>4.6 Verify the Data</h3>
+<ul>
+<li>Check that the number of services returned matches the expected count from your internal catalog.</li>
+<li>Ensure that each service instance has a non‑null <code>id</code> and <code>service_name</code>.</li>
+<li>Confirm that the <code>state</code> field is <code>ACTIVE</code> for all entries.</li>
+</ul>
+
+<h3>4.7 Security Note</h3>
+<p>Never commit <code>client_id</code> or <code>client_secret</code> to source control. Store them in a secure vault such as SAP Secure Storage or an external secrets manager.</p>
+</section>
+
+<section id="configuration-details">
+<h2>5. Configuration Details</h2>
+<p>Below is a quick reference for all configuration values used in the instructions:</p>
+<table>
+<tr><th>Parameter</th><th>Description</th><th>Example</th></tr>
+<tr><td>Global Account ID</td><td>Unique identifier for the BTP organization.</td><td>8e5e6b2c-9c6d-4a23-9f1b-1c0d2e3f4a5b</td></tr>
+<tr><td>Sub‑Account ID</td><td>Unique identifier for the specific tenant.</td><td>7f3a8b1c-2e5d-4f9c-8b2e-9a0c1d2f3e4b</td></tr>
+<tr><td>Region</td><td>Region code (e.g., eu10, eu11, ap21).</td><td>eu10</td></tr>
+<tr><td>Client ID</td><td>OAuth 2.0 client ID.</td><td>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</td></tr>
+<tr><td>Client Secret</td><td>OAuth 2.0 client secret.</td><td>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</td></tr>
+<tr><td>Scope</td><td>API permission required.</td><td>accounts.subaccount.read</td></tr>
+<tr><td>Token URL</td><td>Endpoint to request an access token.</td><td>https://accounts.eu10.hanatrial.ondemand.com/api/token</td></tr>
+<tr><td>Service Instances API</td><td>Endpoint to list services.</td><td>https://accounts.eu10.hanatrial.ondemand.com/api/accounts/v1/subaccount/{subaccount_id}/service-instances</td></tr>
+</table>
+</section>
+
+<section id="verification-steps">
+<h2>6. Verification Steps</h2>
+<ol>
+<li>Run the CURL command for the token and confirm a 200 OK response with a valid <code>access_token</code>.</li>
+<li>Execute the service‑instances API call and confirm a 200 OK with a non‑empty JSON array.</li>
+<li>Cross‑check the service names and plans against your internal catalog or BTP Cockpit.</li>
+<li>Ensure no <code>ERROR</code> or <code>FAILED</code> states appear in the list.</li>
+<li>Optionally, run the CLI <code>cf services</code> command and verify the same services are displayed.</li>
+</ol>
+</section>
+
+<section id="next-steps">
+<h2>7. Next Steps</h2>
+<ul>
+<li>Export the list to a <code>.csv</code> file for reporting or integration into your CMDB.</li>
+<li>Set up a scheduled job (e.g., via SAP Workflow Automation or an external scheduler) to refresh the service list weekly.</li>
+<li>Integrate the API call into a monitoring dashboard to trigger alerts if a service becomes <code>FAILED</code> or <code>DELETED</code>.</li>
+<li>Document any new service instances that need to be provisioned or decommissioned.</li>
+</ul>
+</section>
+
+<section id="troubleshooting">
+<h2>8. Troubleshooting</h2>
+<table>
+<tr><th>Problem</th><th>Cause</th><th>Fix</th></tr>
+<tr>
+<td>Token request returns 401</td>
+<td>Invalid client ID/secret or missing <code>accounts.subaccount.read</code> scope.</td>
+<td>Verify credentials, regenerate client secret, and ensure scope is included.</td>
+</tr>
+<tr>
+<td>Service‑instances API returns 404</td>
+<td>Wrong sub‑account ID or region mismatch.</td>
+<td>Confirm the sub‑account ID in the URL and use the correct region endpoint.</td>
+</tr>
+<tr>
+<td>No services returned</td>
+<td>All services are in <code>DELETED</code> state or you lack permissions.</td>
+<td>Check the service state via BTP Cockpit and adjust ACLs.</td>
+</tr>
+<tr>
+<td>CURL fails with SSL error</td>
+<td>Local machine missing CA certificates for the region.</td>
+<td>Update <code>/etc/ssl/certs/ca-certificates.crt</code> or add <code>-k</code> for testing (not recommended for production).</td>
+</tr>
+<tr>
+<td>cf services shows “FAILED” services only</td>
+<td>The CF CLI might be targeting a different space.</td>
+<td>Use <code>cf target -s</code> to switch to the correct space or run <code>cf services --all</code>.</td>
+</tr>
+</table>
+</section>
+</div>
+<footer>
+<p>Status: DRAFT – No production deployment yet.</p>
+<p>© 2026 SAP SE – All rights reserved.</p>
+</footer>
+</body>
+</html>
