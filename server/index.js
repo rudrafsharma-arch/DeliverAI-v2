@@ -322,8 +322,10 @@ app.post('/api/architect/chat', async (req, res) => {
     logger.info('Architect chat: ' + message.substring(0, 50), { projectId, category: 'architect' });
     const result = await architect.chat(message, projectId, history || []);
     // If architect decided to run an agent, execute it
-    if (result.action && result.action.type === 'run_agent') {
-      const { agentId, task } = result.action;
+    // Only run agent if user explicitly asked for an action
+    const actionWords = ['run','execute','generate','create','provision','deploy','do it','trigger'];
+    const userWantsAction = actionWords.some(w => message.toLowerCase().includes(w));
+    if (result.action && result.action.type === 'run_agent' && userWantsAction) {
       const agentRunner = require('./agents/runner');
       const agent = agentRunner.getAgent(agentId);
       if (agent) {
@@ -380,8 +382,8 @@ app.get('/api/btp/run', async (req, res) => {
     const tools = await btpConnector.listTools();
     send('status', { message: `Loaded ${tools.length} BTP tools` });
     const env=readEnv(); const btpGlobalAccount=env.BTP_GLOBAL_ACCOUNT||'8cede957trial-ga'; const btpSubaccount=env.BTP_SUBACCOUNT_ID||'4e2eaf4b-4463-4be9-9926-7cf17e8adaba'; const btpUser=env.BTP_USER||env.BTP_EMAIL||'';
-    const systemPrompt = `You are a SAP BTP Administrator. Respond with ONLY a valid JSON array of tool calls.\nEXACT tool names (use these exactly): ${tools.map(t => t.name).join(', ')}\nContext: global_account: "${btpGlobalAccount}", subaccount_id: "${btpSubaccount}", user: "${btpUser}"\nRules: Return ONLY JSON array. Each item: {"tool": "EXACT_NAME", "args": {...}, "description": "what"}. Always use global_account and subaccount_id from context. Max 5 calls.`;
-    send('status', { message: 'AI analyzing instruction...' });
+    const workingTools = ['Subscription-list','Subscription-get','RoleCollection-list','RoleCollection-get','RoleCollection-assignUser','Subaccount-get','Subaccount-list','GlobalAccountServiceEntitlement-list','EnvironmentInstance-list'];
+    const systemPrompt = `You are a SAP BTP Administrator. Respond with ONLY a valid JSON array of tool calls.\nUse ONLY these working tools: ${workingTools.join(', ')}\nContext: global_account: "${btpGlobalAccount}", subaccount_id: "${btpSubaccount}"\nRules: Return ONLY JSON array. Each item: {"tool": "EXACT_NAME", "args": {...}, "description": "what"}. Max 3 calls.`;
     const aiResponse = await callAI(task || 'List all subscriptions', systemPrompt, { maxTokens: 1000 });
     send('log', { text: `AI response: ${aiResponse.substring(0, 100)}` });
     let toolCalls = [];
@@ -504,6 +506,7 @@ server.listen(PORT, () => {
 });
 
 module.exports = { app, server };
+
 
 
 

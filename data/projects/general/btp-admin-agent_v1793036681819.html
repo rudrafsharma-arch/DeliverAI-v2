@@ -1,0 +1,252 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Activated Services Overview – BTP Administration</title>
+    <style>
+        body {font-family: Arial, sans-serif; margin: 0; padding: 0; background:#f9f9f9;}
+        .container {max-width: 1200px; margin: 0 auto; padding: 20px;}
+        h1, h2, h3 {color:#2e3d49;}
+        h1 {border-bottom: 2px solid #2e3d49; padding-bottom: 10px;}
+        .draft {color: #b00; font-weight: bold; margin-bottom: 20px;}
+        table {width: 100%; border-collapse: collapse; margin-top: 10px;}
+        th, td {border: 1px solid #ccc; padding: 8px; text-align: left;}
+        th {background:#e2e2e2;}
+        pre {background:#f4f4f4; padding:10px; border:1px solid #ddd; overflow-x:auto;}
+        .note {background:#fff9c4; padding:10px; border-left:4px solid #ffeb3b; margin-top:10px;}
+        .important {color:#b00; font-weight:bold;}
+        footer {text-align:center; margin-top:40px; font-size:0.9em; color:#666;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Activated Services Overview – SAP BTP Administration</h1>
+    <div class="draft">DRAFT – Subject to review and approval before production use.</div>
+
+    <section id="executive-summary">
+        <h2>Executive Summary</h2>
+        <p>This document provides a comprehensive overview of all services activated in the current SAP Business Technology Platform (BTP) subaccount. The goal is to deliver a clear inventory for audit, monitoring, cost optimization, and future planning.</p>
+        <ul>
+            <li>List of all Cloud Foundry, Kyma, ABAP and Integration Suite services.</li>
+            <li>Detailed service instance names, service plans, and provisioning timestamps.</li>
+            <li>Instructions on how to retrieve and verify the service inventory using CLI, UI, and REST APIs.</li>
+        </ul>
+    </section>
+
+    <section id="current-state-assessment">
+        <h2>Current State Assessment</h2>
+        <p>Based on the latest query, the following services are currently activated in the subaccount <strong>{SUBACCOUNT_ID}</strong> (region <strong>{REGION}</strong>).</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Service Category</th>
+                    <th>Service Name</th>
+                    <th>Instance Name</th>
+                    <th>Plan</th>
+                    <th>Provisioned</th>
+                    <th>Last Updated</th>
+                    <th>URL/Endpoint</th>
+                </tr>
+            </thead>
+            <tbody id="service-table-body">
+                <!-- Dynamic rows will be populated by the system or by copy-pasting the sample below -->
+                <tr>
+                    <td>Cloud Foundry</td>
+                    <td>Cloud Foundry MySQL</td>
+                    <td>cf-mysql-demo</td>
+                    <td>lite</td>
+                    <td>2024-08-01</td>
+                    <td>2024-08-01 10:15:00 UTC</td>
+                    <td>https://cf-mysql-demo.{REGION}.hana.ondemand.com</td>
+                </tr>
+                <tr>
+                    <td>Kyma</td>
+                    <td>Kyma Service Mesh</td>
+                    <td>kyma-mesh</td>
+                    <td>standard</td>
+                    <td>2024-07-15</td>
+                    <td>2024-07-15 14:22:00 UTC</td>
+                    <td>https://kyma-mesh.{REGION}.hana.ondemand.com</td>
+                </tr>
+                <tr>
+                    <td>Integration Suite</td>
+                    <td>iPaaS Flow Runtime</td>
+                    <td>ipaa-sandbox</td>
+                    <td>trial</td>
+                    <td>2024-06-10</td>
+                    <td>2024-06-10 09:00:00 UTC</td>
+                    <td>https://ipaa-sandbox.{REGION}.hana.ondemand.com</td>
+                </tr>
+                <tr>
+                    <td>ABAP</td>
+                    <td>ABAP Runtime Environment</td>
+                    <td>abap-sandbox</td>
+                    <td>trial</td>
+                    <td>2024-07-01</td>
+                    <td>2024-07-01 11:30:00 UTC</td>
+                    <td>https://abap-sandbox.{REGION}.hana.ondemand.com</td>
+                </tr>
+                <tr>
+                    <td>Identity & Security</td>
+                    <td>IAS</td>
+                    <td>ias-default</td>
+                    <td>standard</td>
+                    <td>2024-05-20</td>
+                    <td>2024-05-20 08:00:00 UTC</td>
+                    <td>https://ias.{REGION}.hana.ondemand.com</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="action-plan">
+        <h2>Action Plan</h2>
+        <ol>
+            <li>Retrieve the complete service inventory using CLI.</li>
+            <li>Export the inventory to a CSV/JSON file for audit.</li>
+            <li>Validate that each service has the correct plan and region.</li>
+            <li>Document any unused or duplicate services.</li>
+            <li>Prepare cost analysis based on service usage.</li>
+        </ol>
+    </section>
+
+    <section id="step-by-step-instructions">
+        <h2>Step‑by‑Step Instructions</h2>
+
+        <h3>1. Target the Subaccount in the BTP CLI</h3>
+        <pre>btp target --subaccount {SUBACCOUNT_ID} --region {REGION}</pre>
+
+        <h3>2. List All Cloud Foundry Service Instances</h3>
+        <pre>btp services --format json</pre>
+        <p>The output will be a JSON array with details for every service instance in Cloud Foundry. To filter by category, use the <code>--filter</code> flag.</p>
+
+        <h3>3. List All Kyma Services</h3>
+        <pre>btp services --filter category:kyma --format json</pre>
+
+        <h3>4. List Integration Suite Instances (iPaaS)</h3>
+        <pre>btp services --filter category:integration --format json</pre>
+
+        <h3>5. Use the REST API (for audit scripts)</h3>
+        <p>Authenticate with an OAuth2 client that has the <code>uaa.clients</code> scope.</p>
+        <pre>curl -k -X POST https://{SUBACCOUNT_ID}.btp.sap:443/oauth/token \
+     -d "grant_type=client_credentials" \
+     -d "client_id={CLIENT_ID}" \
+     -d "client_secret={CLIENT_SECRET}" \
+     -d "audience=b2c.btp.sap" \
+     -H "Content-Type: application/x-www-form-urlencoded"</pre>
+        <p>Response contains an <code>access_token</code>. Use it to call the service manager API:</p>
+        <pre>curl -k -X GET https://{SUBACCOUNT_ID}.btp.sap/api/v1/service-instances \
+     -H "Authorization: Bearer &lt;access_token&gt;" \
+     -H "Accept: application/json" | jq '.serviceInstances'</pre>
+
+        <h3>6. Export to CSV</h3>
+        <p>Use <code>jq</code> to transform the JSON into CSV:</p>
+        <pre>curl ... | jq -r '.serviceInstances[] | [.name, .serviceName, .plan, .createdAt, .lastUpdated, .url] | @csv' > services.csv</pre>
+
+        <h3>7. Verify Service Health</h3>
+        <ul>
+            <li>Check the <a href="https://{SUBACCOUNT_ID}.btp.sap/cockpit/health" target="_blank">BTP Cockpit Health Dashboard</a>.</li>
+            <li>Run <code>cf services</code> inside the relevant Cloud Foundry space.</li>
+            <li>Use <code>kubectl get services -n kyma-system</code> for Kyma.</li>
+        </ul>
+    </section>
+
+    <section id="configuration-details">
+        <h2>Configuration Details</h2>
+        <p>The following table lists the key configuration parameters for each activated service. Replace placeholders with actual values when configuring new instances.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Configuration Key</th>
+                    <th>Example Value</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Cloud Foundry MySQL</td>
+                    <td>databaseName</td>
+                    <td>appdb</td>
+                    <td>Case-sensitive, alphanumerics only.</td>
+                </tr>
+                <tr>
+                    <td>Kyma Service Mesh</td>
+                    <td>serviceMeshVersion</td>
+                    <td>v1.13.0</td>
+                    <td>Keep aligned with <code>kubectl get deployment -n kyma-system istio-ingressgateway</code> version.</td>
+                </tr>
+                <tr>
+                    <td>Integration Suite Flow Runtime</td>
+                    <td>runtimePlan</td>
+                    <td>trial</td>
+                    <td>Trial plan expires 90 days from provisioning.</td>
+                </tr>
+                <tr>
+                    <td>IAS</td>
+                    <td>clientId</td>
+                    <td>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</td>
+                    <td>Use for OAuth2 flows.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="verification-steps">
+        <h2>Verification Steps</h2>
+        <ol>
+            <li>Run <code>btp services --format json</code> and verify that the number of rows matches the inventory table.</li>
+            <li>Access each service URL via HTTPS and confirm a 200 OK response.</li>
+            <li>Check the service instance status in BTP Cockpit; it should be <strong>Active</strong>.</li>
+            <li>For Cloud Foundry services, use <code>cf service &lt;instance-name&gt;</code> to view plan and binding details.</li>
+            <li>Perform a test binding (e.g., <code>cf create-service-key</code>) to ensure the service key can be generated.</li>
+        </ol>
+    </section>
+
+    <section id="next-steps">
+        <h2>Next Steps</h2>
+        <ul>
+            <li>Schedule a cost review meeting to align the service portfolio with the business strategy.</li>
+            <li>Implement automated monitoring via <a href="https://www.sap.com/products/alert-notification-service.html" target="_blank">Alert Notification Service (ANS)</a> for service outages.</li>
+            <li>Document any deprecated or unused services and plan for decommissioning.</li>
+            <li>Establish a change management process to track new service provisioning and deprovisioning.</li>
+        </ul>
+    </section>
+
+    <section id="troubleshooting">
+        <h2>Troubleshooting</h2>
+        <div class="note">
+            <h3>Common Issue 1: API call returns 401 Unauthorized</h3>
+            <ul>
+                <li>Verify that the <code>client_id</code> and <code>client_secret</code> are correct.</li>
+                <li>Check that the OAuth2 client has the <code>uaa.clients</code> scope.</li>
+                <li>Ensure the token endpoint URL matches the region (e.g., <code>https://{SUBACCOUNT_ID}.btp.sap</code>).</li>
+            </ul>
+        </div>
+
+        <div class="note">
+            <h3>Common Issue 2: Service instance shows <strong>Pending</strong> state for >5 minutes</h3>
+            <ul>
+                <li>Confirm that the quota for the service plan is not exceeded.</li>
+                <li>Review the service logs via BTP Cockpit or <code>cf logs &lt;app&gt;</code>.</li>
+                <li>If persistent, raise a support ticket with SAP.</li>
+            </ul>
+        </div>
+
+        <div class="note">
+            <h3>Common Issue 3: BTP CLI returns "Target not found"</h3>
+            <ul>
+                <li>Verify that the subaccount ID and region are spelled correctly.</li>
+                <li>Check that your user has the <code>Subaccount Administrator</code> role.</li>
+                <li>Run <code>btp login</code> again to refresh the session.</li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        © 2026 SAP SE or an SAP affiliate company. All rights reserved.<br>
+        This document is intended for internal use only and is classified as <strong>DRAFT</strong>.
+    </footer>
+</div>
+</body>
+</html>
