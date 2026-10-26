@@ -2264,5 +2264,148 @@
     "metadata": "{}",
     "created_at": "2026-10-26T16:45:26.242Z",
     "updated_at": "2026-10-26T16:45:26.243Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client disconnected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:45:39.188Z",
+    "updated_at": "2026-10-26T16:45:39.189Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client disconnected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:45:39.195Z",
+    "updated_at": "2026-10-26T16:45:39.196Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client disconnected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:45:39.200Z",
+    "updated_at": "2026-10-26T16:45:39.201Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client disconnected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:45:39.204Z",
+    "updated_at": "2026-10-26T16:45:39.205Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client connected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:45:43.922Z",
+    "updated_at": "2026-10-26T16:45:43.922Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client connected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:45:43.937Z",
+    "updated_at": "2026-10-26T16:45:43.938Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "architect",
+    "message": "Architect chat: can you connect with BTP?",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:46:10.661Z",
+    "updated_at": "2026-10-26T16:46:10.661Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "architect",
+    "message": "Architect: can you connect with BTP?",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:46:10.664Z",
+    "updated_at": "2026-10-26T16:46:10.664Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "ai-engine",
+    "message": "Calling AI engine: groq",
+    "metadata": "{\"engine\":\"groq\"}",
+    "created_at": "2026-10-26T16:46:10.666Z",
+    "updated_at": "2026-10-26T16:46:10.666Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "architect",
+    "message": "Architect chat: Check with BTP Agent",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:46:27.046Z",
+    "updated_at": "2026-10-26T16:46:27.046Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "architect",
+    "message": "Architect: Check with BTP Agent",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:46:27.048Z",
+    "updated_at": "2026-10-26T16:46:27.048Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "ai-engine",
+    "message": "Calling AI engine: groq",
+    "metadata": "{\"engine\":\"groq\"}",
+    "created_at": "2026-10-26T16:46:27.049Z",
+    "updated_at": "2026-10-26T16:46:27.049Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "btp-connector",
+    "message": "BTP access token expired - refreshing...",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:48:09.763Z",
+    "updated_at": "2026-10-26T16:48:09.764Z"
   }
 ]

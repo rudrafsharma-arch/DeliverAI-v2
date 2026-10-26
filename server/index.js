@@ -319,11 +319,27 @@ app.post('/api/documents/:id/refine', async (req, res) => {
 app.post('/api/architect/chat', async (req, res) => {
   const { message, projectId, history } = req.body;
   try {
-    logger.info(`Architect chat: ${message.substring(0, 50)}`, { projectId, category: 'architect' });
-    const response = await architect.chat(message, projectId, history || []);
-    res.json({ message: response });
+    logger.info('Architect chat: ' + message.substring(0, 50), { projectId, category: 'architect' });
+    const result = await architect.chat(message, projectId, history || []);
+    // If architect decided to run an agent, execute it
+    if (result.action && result.action.type === 'run_agent') {
+      const { agentId, task } = result.action;
+      const agentRunner = require('./agents/runner');
+      const agent = agentRunner.getAgent(agentId);
+      if (agent) {
+        const jobId = require('./core/job-manager').createJob(agentId, agent.name, projectId, { task, description: task }, 'api');
+        res.json({ message: result.text, action: result.action, jobId });
+        // Run agent in background
+        require('./core/job-manager').startJob(jobId, async (id, onEvent) => {
+          return agentRunner.runAgent(agentId, { task, description: task }, projectId, id, onEvent);
+        });
+        return;
+      }
+    }
+    res.json({ message: result.text || result });
   } catch(e) {
-    res.status(500).json({ error: e.message });
+    logger.error('Architect error: ' + e.message, { category: 'architect' });
+    res.status(500).json({ error: e.message, message: 'Sorry, I encountered an error: ' + e.message });
   }
 });
 
