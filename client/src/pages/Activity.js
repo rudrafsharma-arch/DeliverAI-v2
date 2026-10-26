@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { api } from '../api';
+﻿import React, { useState, useEffect } from 'react';
+import { api, BASE_URL } from '../api';
 
 const BLUE = '#0070F2';
 
@@ -21,8 +21,35 @@ export default function Activity({ project }) {
     }
   }, [selected?.id]);
 
+  async function openDocument(job) {
+    // Try documents DB first
+    try {
+      const docs = await api.get(`/api/documents?agentId=${job.agent_id}&projectId=${project?.id || ''}`);
+      if (docs && docs[0]) {
+        const d = await api.get(`/api/documents/${docs[0].id}`);
+        if (d.content) { const w = window.open(); w.document.write(d.content); return; }
+      }
+    } catch(e) {}
+    // Fall back to job output
+    try {
+      const j = await api.get(`/api/jobs/${job.id}`);
+      if (j.output) {
+        try {
+          const out = JSON.parse(j.output);
+          if (out.html) { const html = out.html.replace(/^```html\n?/,'').replace(/```$/,'').trim(); const w = window.open(); w.document.write(html); return; }
+        } catch(e) {}
+        if (j.output.includes('<html') || j.output.includes('<!DOCTYPE')) {
+          const w = window.open(); w.document.write(j.output); return;
+        }
+        // Plain text output
+        const w = window.open();
+        w.document.write('<pre style="font-family:monospace;padding:20px;white-space:pre-wrap">' + j.output + '</pre>');
+      }
+    } catch(e) { alert('Could not open document: ' + e.message); }
+  }
+
   const statusColor = { pending: '#94a3b8', running: '#3b82f6', completed: '#16a34a', failed: '#dc2626', cancelled: '#f59e0b' };
-  const statusIcon = { pending: '⏳', running: '🔄', completed: '✅', failed: '❌', cancelled: '⚠️' };
+  const statusIcon = { pending: 'â³', running: 'ðŸ”„', completed: 'âœ…', failed: 'âŒ', cancelled: 'âš ï¸' };
 
   return (
     <div style={{ display: 'flex', gap: 20, height: 'calc(100vh - 120px)' }}>
@@ -45,7 +72,7 @@ export default function Activity({ project }) {
             </div>
             {job.status === 'running' && (
               <div style={{ marginTop: 8, height: 3, background: '#e2e8f0', borderRadius: 2 }}>
-                <div style={{ height: '100%', background: BLUE, borderRadius: 2, animation: 'pulse 1.5s infinite', width: '60%' }} />
+                <div style={{ height: '100%', background: BLUE, borderRadius: 2, width: '60%' }} />
               </div>
             )}
           </div>
@@ -59,13 +86,13 @@ export default function Activity({ project }) {
             <div style={{ padding: '14px 20px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 15 }}>{selected.agent_name}</div>
-                <div style={{ fontSize: 12, color: '#64748b' }}>Job: {selected.id} • Mode: {selected.mode}</div>
+                <div style={{ fontSize: 12, color: '#64748b' }}>Job: {selected.id} &bull; Mode: {selected.mode}</div>
               </div>
               {selected.status === 'completed' && (
-                <button onClick={async () => {
-                  const docs = await api.get(`/api/documents?agentId=${selected.agent_id}&projectId=${project?.id || ''}`);
-                  if (docs[0]) { const d = await api.get(`/api/documents/${docs[0].id}`); if (d.content) { const w = window.open(); w.document.write(d.content); } }
-                }} style={{ padding: '6px 14px', borderRadius: 8, border: 'none', background: BLUE, color: '#fff', cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>Open Document</button>
+                <button onClick={() => openDocument(selected)}
+                  style={{ padding: '6px 14px', borderRadius: 8, border: 'none', background: BLUE, color: '#fff', cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>
+                  Open Document
+                </button>
               )}
             </div>
             <div style={{ flex: 1, overflowY: 'auto', padding: 16 }}>

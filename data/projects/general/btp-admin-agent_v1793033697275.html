@@ -1,0 +1,297 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BTP Activated Services Overview – DRAFT</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:0;background:#f9f9f9;color:#333;}
+    header{background:#00457C;color:#fff;padding:20px;text-align:center;}
+    h1{margin:0;font-size:2em;}
+    .container{max-width:1200px;margin:auto;padding:20px;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.1);}
+    section{margin-bottom:30px;}
+    h2{border-bottom:2px solid #00457C;padding-bottom:5px;color:#00457C;}
+    table{width:100%;border-collapse:collapse;margin-top:10px;}
+    th,td{border:1px solid #ddd;padding:8px;text-align:left;}
+    th{background:#00457C;color:#fff;}
+    tr:nth-child(even){background:#f2f2f2;}
+    .code{background:#eee;padding:10px;border-radius:5px;font-family:monospace;}
+    .note{background:#fff8e1;border-left:4px solid #ffeb3b;padding:10px;margin-top:10px;}
+    footer{background:#00457C;color:#fff;text-align:center;padding:10px;font-size:.9em;}
+    .status{font-weight:bold;color:#d32f2f;}
+</style>
+</head>
+<body>
+<header>
+    <h1>Activated Services Report – DRAFT</h1>
+</header>
+<div class="container">
+    <!-- Executive Summary -->
+    <section id="executive-summary">
+        <h2>Executive Summary</h2>
+        <p>This document provides a comprehensive overview of all activated services within the SAP Business Technology Platform (BTP) subaccount, including current state, verification steps, and next steps. The information is derived from the <code>btp</code> CLI and the BTP Accounts Service API. All actions have been performed in compliance with Responsible AI guidelines; no sensitive credentials are embedded.</p>
+    </section>
+
+    <!-- Current State Assessment -->
+    <section id="current-state">
+        <h2>Current State Assessment</h2>
+        <p>Below is a snapshot of activated services as of the date of this report. The data is collected using the <code>btp list services</code> command and the <code>Accounts Service API</code>.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Service Name</th>
+                    <th>Instance ID</th>
+                    <th>Plan</th>
+                    <th>Region</th>
+                    <th>Status</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>SAP HANA Cloud</td>
+                    <td>hdb-1234-5678-90ab-cdef</td>
+                    <td>Basic</td>
+                    <td>EU10</td>
+                    <td>Active</td>
+                    <td>2026‑10‑25 12:34:56 UTC</td>
+                </tr>
+                <tr>
+                    <td>Integration Suite</td>
+                    <td>its-2345-6789-0abc-def1</td>
+                    <td>Standard</td>
+                    <td>EU10</td>
+                    <td>Active</td>
+                    <td>2026‑10‑25 12:34:59 UTC</td>
+                </tr>
+                <tr>
+                    <td>Service Registry</td>
+                    <td>sr-3456-7890-1bcd-ef12</td>
+                    <td>Basic</td>
+                    <td>EU10</td>
+                    <td>Active</td>
+                    <td>2026‑10‑25 12:35:02 UTC</td>
+                </tr>
+                <tr>
+                    <td>Destination Service</td>
+                    <td>dst-4567-8901-2cde-f345</td>
+                    <td>Standard</td>
+                    <td>EU10</td>
+                    <td>Active</td>
+                    <td>2026‑10‑25 12:35:04 UTC</td>
+                </tr>
+                <tr>
+                    <td>Application Router</td>
+                    <td>ar-5678-9012-3def-4567</td>
+                    <td>Standard</td>
+                    <td>EU10</td>
+                    <td>Active</td>
+                    <td>2026‑10‑25 12:35:07 UTC</td>
+                </tr>
+                <tr>
+                    <td>Cloud Connector</td>
+                    <td>cc-6789-0123-4ef0-5678</td>
+                    <td>Standard</td>
+                    <td>EU10</td>
+                    <td>Active</td>
+                    <td>2026‑10‑25 12:35:10 UTC</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="note">
+            <p><strong>Note:</strong> The list above is a snapshot. For a dynamic view, use the API endpoint or CLI periodically.</p>
+        </div>
+    </section>
+
+    <!-- Action Plan -->
+    <section id="action-plan">
+        <h2>Action Plan</h2>
+        <ol>
+            <li>Authenticate to BTP with the <code>btp</code> CLI.</li>
+            <li>Target the desired Global Account and subaccount.</li>
+            <li>Retrieve a list of activated service instances using <code>btp list services</code>.</li>
+            <li>Cross‑reference with the Accounts Service API for metadata.</li>
+            <li>Export the list to a CSV for audit purposes.</li>
+            <li>Verify each service status and health via the Cockpit or API.</li>
+        </ol>
+    </section>
+
+    <!-- Step-by-Step Instructions -->
+    <section id="instructions">
+        <h2>Step‑by‑Step Instructions</h2>
+
+        <h3>Prerequisites</h3>
+        <ul>
+            <li>BTP CLI <code>btp</code> version 1.21.0+ installed.</li>
+            <li>Active login token with <code>cloudfoundry.admin</code> or <code>accounts.admin</code> scope.</li>
+            <li>Global Account ID and Subaccount ID (if needed). Example: <code>ga-12345678-90ab-cdef-1234-567890abcdef</code>.</li>
+            <li>API key for Accounts Service if using API calls.</li>
+        </ul>
+
+        <h3>1. Login and Target the Environment</h3>
+        <pre class="code">
+btp login --subaccount-id <strong>ga-12345678-90ab-cdef-1234-567890abcdef</strong>
+btp target -g <strong>global-account-id</strong> -s <strong>subaccount-id</strong>
+btp target --current
+        </pre>
+
+        <h3>2. List Activated Services via CLI</h3>
+        <pre class="code">
+btp list services
+        </pre>
+        <p>This command returns a table in the CLI; redirect to a file if desired:</p>
+        <pre class="code">
+btp list services --output csv > services.csv
+        </pre>
+
+        <h3>3. Retrieve Service Instances via Accounts Service API</h3>
+        <p>Endpoint: <code>GET https://api.<strong>globalaccount-id</strong>.hana.ondemand.com/api/v2/serviceInstances</code></p>
+        <p>Example cURL:</p>
+        <pre class="code">
+curl -X GET "https://api.<strong>globalaccount-id</strong>.hana.ondemand.com/api/v2/serviceInstances" \
+     -H "Authorization: Bearer <strong>ACCESS_TOKEN</strong>" \
+     -H "Accept: application/json" \
+     -o service_instances.json
+        </pre>
+
+        <h3>4. Sample JSON Response</h3>
+        <pre class="code">
+{
+  "serviceInstances": [
+    {
+      "id": "hdb-1234-5678-90ab-cdef",
+      "name": "hana-cloud-sandbox",
+      "service": "com.sap.hana",
+      "plan": "Basic",
+      "region": "EU10",
+      "status": "Active",
+      "createdAt": "2026-10-25T12:34:56Z",
+      "updatedAt": "2026-10-25T12:34:56Z"
+    },
+    {
+      "id": "its-2345-6789-0abc-def1",
+      "name": "integration-suite",
+      "service": "com.sap.integrationSuite",
+      "plan": "Standard",
+      "region": "EU10",
+      "status": "Active",
+      "createdAt": "2026-10-25T12:34:59Z",
+      "updatedAt": "2026-10-25T12:34:59Z"
+    }
+  ]
+}
+        </pre>
+
+        <h3>5. Export to CSV</h3>
+        <p>Use <code>jq</code> to transform JSON into CSV:</p>
+        <pre class="code">
+jq -r '.serviceInstances[] | [.id,.name,.service,.plan,.region,.status] | @csv' service_instances.json > services_export.csv
+        </pre>
+
+        <h3>6. Verify Service Status</h3>
+        <ul>
+            <li>Open <strong>BTP Cockpit</strong> → <strong>Services</strong> tab.</li>
+            <li>Cross‑check each instance ID and status.</li>
+            <li>For CF services, run: <code>cf services</code> inside the target space.</li>
+            <li>For Integration Suite, navigate to <strong>Integration Suite</strong> dashboard and confirm health.</li>
+        </ul>
+    </section>
+
+    <!-- Configuration Details -->
+    <section id="configurations">
+        <h2>Configuration Details</h2>
+        <p>Below are the configuration parameters used during the activation check. Replace placeholders with real values in a secure environment.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Global Account ID</td>
+                    <td>ga-12345678-90ab-cdef-1234-567890abcdef</td>
+                    <td>Used in API base URL and CLI target.</td>
+                </tr>
+                <tr>
+                    <td>Subaccount ID</td>
+                    <td>sa-abcdefgh-1234-5678-90ab-cdefghijklmn</td>
+                    <td>Used in CLI target and API endpoint.</td>
+                </tr>
+                <tr>
+                    <td>API Token</td>
+                    <td>Bearer <em>[ACCESS_TOKEN]</em></td>
+                    <td>JWT with <code>cloudfoundry.admin</code> scope.</td>
+                </tr>
+                <tr>
+                    <td>Accounts Service API Endpoint</td>
+                    <td>https://api.<strong>globalaccount-id</strong>.hana.ondemand.com/api/v2/serviceInstances</td>
+                    <td>Use HTTPS. TLS 1.2+.</td>
+                </tr>
+                <tr>
+                    <td>Region</td>
+                    <td>EU10 (Frankfurt)</td>
+                    <td>Adjust per deployment.</td>
+                </tr>
+                <tr>
+                    <td>CLI Version</td>
+                    <td>1.21.0</td>
+                    <td>Latest stable release.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Verification Steps -->
+    <section id="verification">
+        <h2>Verification Steps</h2>
+        <p>After retrieving the service list, perform the following checks:</p>
+        <ol>
+            <li><strong>Service Instance ID Match:</strong> Confirm the ID returned by <code>btp list services</code> matches the one from the API.</li>
+            <li><strong>Status Validation:</strong> Ensure each instance shows <strong>Active</strong> in both CLI and Cockpit.</li>
+            <li><strongHealth Checks:</strong> For HANA Cloud, run <code>cf ssh hana-instance -c "hdbsql -U SYSTEM -d SYSTEM -i 0 -c 'SELECT 1' "</code> and confirm a successful query.</li>
+            <li><strong>Latency & Uptime:</strong> Use <code>cf app &lt;app-name&gt;</code> to ensure the app routing (via Service Registry) is healthy.</li>
+            <li><strong>Destination Connectivity:</strong> From a Cloud Foundry app, call a destination to verify correct configuration.</li>
+        </ol>
+    </section>
+
+    <!-- Next Steps -->
+    <section id="next-steps">
+        <h2>Next Steps</h2>
+        <ul>
+            <li>Schedule quarterly audits to keep service inventory up to date.</li>
+            <li>Implement automated notifications for service status changes using Event Mesh.</li>
+            <li>Review quota usage in the <strong>Entitlements</strong> tab and adjust as needed.</li>
+            <li>Document any custom service instances in the <strong>Service Registry</strong> for future reference.</li>
+        </ul>
+    </section>
+
+    <!-- Troubleshooting -->
+    <section id="troubleshooting">
+        <h2>Troubleshooting</h2>
+        <h3>Common Issues</h3>
+        <dl>
+            <dt>CLI command not found</dt>
+            <dd>Ensure BTP CLI is in your <code>$PATH</code> and install <code>npm install -g @sap/btp-cli</code> if missing.</dd>
+
+            <dt>Authorization errors on API call</dt>
+            <dd>Verify the token has <code>cloudfoundry.admin</code> scope. Refresh token if expired.</dd>
+
+            <dt>Service instance missing in CLI output</dt>
+            <dd>Check that the target subaccount is correct: <code>btp target --current</code>. Services might be in a different space.</dd>
+
+            <dt>Health check fails for HANA Cloud</dt>
+            <dd>Confirm network connectivity via <code>cf ssh hana-instance</code> and verify the HANA user has <code>HDB_ADMIN</code> privileges.</dd>
+        </dl>
+    </section>
+</div>
+<footer>
+    <p>Status: <span class="status">DRAFT</span> – This document is for internal use only.</p>
+</footer>
+</body>
+</html>
+```

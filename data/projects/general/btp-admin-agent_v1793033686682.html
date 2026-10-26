@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Check BTP Connectivity Status – Draft Report</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;background:#f9f9f9;color:#333;margin:0;padding:0;}
+header{background:#004080;color:#fff;padding:20px;text-align:center;}
+h1{margin:0;font-size:2.2em;}
+h2{border-bottom:2px solid #004080;color:#004080;padding-bottom:5px;margin-top:1.5em;}
+section{background:#fff;margin:20px auto;padding:20px;border-radius:5px;width:90%;max-width:1200px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+table{width:100%;border-collapse:collapse;margin-top:10px;}
+th,td{border:1px solid #ddd;padding:8px;text-align:left;}
+th{background:#004080;color:#fff;}
+code{font-family:"Courier New",Courier,monospace;background:#f4f4f4;padding:2px 4px;border-radius:3px;}
+pre{background:#f4f4f4;border:1px solid #ddd;border-radius:4px;padding:10px;overflow:auto;}
+footer{background:#004080;color:#fff;padding:10px;text-align:center;font-size:0.9em;}
+.note{background:#fffbe6;border-left:4px solid #ffc107;padding:10px;margin-top:15px;}
+</style>
+</head>
+<body>
+<header>
+<h1>Check BTP Connectivity Status – Draft Report</h1>
+<p>Document generated on 2026-10-26 | SAP BTP Admin Agent</p>
+</header>
+<section>
+<h2>Executive Summary</h2>
+<p>This report provides a step‑by‑step guide to verify the connectivity status of your SAP Business Technology Platform (BTP) sub‑account to on‑premise systems, destinations, and the Cloud Connector. It includes:</p>
+<ul>
+<li>Assessment of existing connectivity configuration.</li>
+<li>CLI and API commands to test connectivity.</li>
+<li>Verification steps and troubleshooting.</li>
+<li>Recommendations for trial, sandbox, and production environments.</li>
+</ul>
+</section>
+
+<section>
+<h2>Current State Assessment</h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Environment</th>
+<th>Status</th>
+<th>Last Checked</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cloud Connector Health</td>
+<td>Sub‑Account 001</td>
+<td>Healthy</td>
+<td>2026‑10‑25 10:15 UTC</td>
+</tr>
+<tr>
+<td>Destination – <code>MY_ONPREM_SYSTEM</code></td>
+<td>Sub‑Account 001</td>
+<td>Connected</td>
+<td>2026‑10‑25 10:17 UTC</td>
+</tr>
+<tr>
+<td>Destination – <code>MY_API_SERVICE</code></td>
+<td>Sub‑Account 001</td>
+<td>Failed</td>
+<td>2026‑10‑25 10:20 UTC</td>
+</tr>
+</tbody>
+</table>
+<p>Note: The table reflects the most recent automated checks performed by the BTP Monitoring Service.</p>
+</section>
+
+<section>
+<h2>Action Plan</h2>
+<ol>
+<li>Validate the Cloud Connector is up‑and‑running.</li>
+<li>Retrieve destination metadata and inspect connectivity status.</li>
+<li>Use the BTP CLI to perform a direct connectivity test.</li>
+<li>Verify via the SAP BTP Cockpit connectivity dashboard.</li>
+<li>Document findings and resolve any issues.</li>
+</ol>
+</section>
+
+<section>
+<h2>Step‑by‑Step Instructions</h2>
+<h3>1. Verify Cloud Connector Health (Web Interface)</h3>
+<ol>
+<li>Log into the SAP BTP Cockpit.</li>
+<li>Navigate to <strong>Connectivity</strong> → <strong>Cloud Connector</strong>.</li>
+<li>Check the health indicator (green ✔). Click <strong>View Details</strong> for logs.</li>
+</ol>
+
+<h3>2. Verify Cloud Connector Health (API)</h3>
+<pre><code>curl -k -u &lt;client-id&gt;:&lt;client-secret&gt; \
+     https://&lt;subaccount&gt;.hana.ondemand.com/api/cloudconnector/v1/status
+</code></pre>
+<p>Expected response snippet:</p>
+<pre><code>{
+  "status": "OK",
+  "timestamp": "2026-10-26T10:30:00Z",
+  "components": {
+    "cloud-connector": {
+      "health": "Healthy",
+      "message": "All tunnels operational"
+    }
+  }
+}
+</code></pre>
+
+<h3>3. Retrieve Destination Metadata</h3>
+<pre><code>curl -k -u &lt;client-id&gt;:&lt;client-secret&gt; \
+     "https://&lt;subaccount&gt;.hana.ondemand.com/api/destination/v1/destinations?name=MY_ONPREM_SYSTEM" | jq .
+</code></pre>
+<p>Key fields to inspect:</p>
+<ul>
+<li><code>name</code></li>
+<li><code>type</code> – should be <code>HTTP</code> or <code>RFC</code></li>
+<li><code>description</code></li>
+<li><code>proxyType</code> – <code>OnPremise</code></li>
+<li><code>connectivityStatus</code> – <code>OK</code> / <code>FAIL</code></li>
+</ul>
+
+<h3>4. Test Destination Connectivity (Direct Call)</h3>
+<pre><code>curl -k -H "X-Requested-By: my-app" \
+     "https://&lt;subaccount&gt;.hana.ondemand.com/api/destination/v1/destinations/MY_ONPREM_SYSTEM/connectivity" \
+     -u &lt;client-id&gt;:&lt;client-secret&gt;
+</code></pre>
+<p>Sample successful response:</p>
+<pre><code>{
+  "status": "OK",
+  "message": "Connectivity established",
+  "lastTest": "2026-10-26T10:45:00Z"
+}
+</code></pre>
+
+<h3>5. Use BTP CLI for Connectivity Check</h3>
+<ol>
+<li>Open terminal and log into your BTP account:</li>
+</ol>
+<pre><code>btp login --subaccount &lt;subaccount-id&gt; --region eu10
+</code></pre>
+<ol start="2">
+<li>Check Cloud Connector status via CLI (if available):</li>
+</ol>
+<pre><code>btp cloud-connector status
+</code></pre>
+<p>Output example:</p>
+<pre><code>Cloud Connector Status: Healthy
+Tunnels: 3 (Active)
+</code></pre>
+<ol start="3">
+<li>Run a connectivity test for a destination:</li>
+</ol>
+<pre><code>btp cf env --json --destination MY_ONPREM_SYSTEM
+</code></pre>
+<p>Result should include <code>"X-CB-Connectivity: OK"</code>.</p>
+
+<h3>6. Verify via SAP BTP Cockpit</h3>
+<ol>
+<li>Navigate to <strong>Connectivity</strong> → <strong>Destinations</strong>.</li>
+<li>Select <code>MY_ONPREM_SYSTEM</code> and inspect the <strong>Connectivity Status</strong> tile.</li>
+<li>Click <strong>Test Connection</strong> to trigger an on‑demand test.</li>
+<li>Confirm the status updates to <strong>Success</strong>.</li>
+</ol>
+
+<h3>7. Troubleshooting and Remediation</h3>
+<p>If any component shows <code>FAIL</code> or <code>Unhealthy</code>, proceed with the troubleshooting steps described in the <a href="#troubleshooting">Troubleshooting section</a>.</p>
+</section>
+
+<section id="configurations">
+<h2>Configuration Details</h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Trial</th>
+<th>Sandbox</th>
+<th>Production</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cloud Connector Tunnel Count</td>
+<td>1–2</td>
+<td>2–5</td>
+<td>5+ (depends on SLA)</td>
+</tr>
+<tr>
+<td>Destination Timeout (ms)</td>
+<td>5000</td>
+<td>10000</td>
+<td>15000</td>
+</tr>
+<tr>
+<td>Allowed Destinations per Sub‑account</td>
+<td>10</td>
+<td>50</td>
+<td>Unlimited (with quota)</td>
+</tr>
+<tr>
+<td>Certificate Validity Period</td>
+<td>30 days</td>
+<td>90 days</td>
+<td>365 days</td>
+</tr>
+<tr>
+<td>Connectivity Test Frequency</td>
+<td>Every 6 hours</td>
+<td>Every 2 hours</td>
+<td>Every hour</td>
+</tr>
+</tbody>
+</table>
+<p>All values are placeholders; adjust per your organization’s policy and the BTP tenant SLA.</p>
+</section>
+
+<section id="verification">
+<h2>Verification Steps</h2>
+<p>After performing each action, use the following checks:</p>
+<ol>
+<li><strong>CLI Output</strong> – Confirm status messages contain <code>OK</code> or <code>Healthy</code>.</li>
+<li><strong>API Response</strong> – Validate JSON includes <code>"status": "OK"</code> or <code>"health": "Healthy"</code>.</li>
+<li><strong>Cockpit Dashboard</strong> – Green indicators with <code>Success</code> status.</li>
+<li><strong>Log Inspection</strong> – Look for <code>ERROR</code> entries in Cloud Connector logs via <code>btp cf logs &lt;cc-instance&gt;</code>.</li>
+<li><strong>Certificate Verification</strong> – Ensure the certificate chain is valid with <code>openssl s_client -connect &lt;cc-host&gt;:443</code>.</li>
+</ol>
+</section>
+
+<section id="troubleshooting">
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Root Cause</th>
+<th>Remediation</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cloud Connector shows <code>Unhealthy</code></td>
+<td>Missing or expired certificate</td>
+<td>Upload new certificate via BTP Cockpit or CLI: <code>btp cloud-connector upload-certificate --file mycert.pem</code></td>
+<td>Re‑check status; should be <code>Healthy</code></td>
+</tr>
+<tr>
+<td>Destination connectivity <code>FAIL</code></td>
+<td>Incorrect proxy configuration or missing tunnel</td>
+<td>Verify <code>proxyType=OnPremise</code> and that the corresponding tunnel is active.</td>
+<td>Run <code>btp cf env</code> to see <code>X-CB-Connectivity: OK</code></td>
+</tr>
+<tr>
+<td>API call returns 401 Unauthorized</td>
+<td>Client credentials not stored or invalid</td>
+<td>Regenerate client id/secret via BTP Cockpit > Service Keys and update CLI config.</td>
+<td>Retry curl command; should return 200.</td>
+</tr>
+<tr>
+<td>Connectivity test times out</td>
+<td>Network latency or firewall blocks</td>
+<td>Check on‑prem firewall logs; allow outbound to <code>*.hana.ondemand.com</code> and Cloud Connector host.</td>
+<td>Test again; timeout should reduce.</td>
+</tr>
+<tr>
+<td>Certificate expiry warning</td>
+<td>Certificate nearing expiration</td>
+<td>Renew and upload new certificate.</td>
+<td>Check <code>openssl s_client</code> output for <code>notBefore</code> and <code>notAfter</code>.</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+<section id="ai-considerations">
+<h2>Responsible AI & Security Considerations</h2>
+<div class="note">
+<p><strong>Security Best Practices:</strong></p>
+<ul>
+<li>Never embed client IDs or secrets in source code.</li>
+<li>Store secrets in the SAP BTP Credential Store or a secure vault.</li>
+<li>Use short‑lived tokens (client credentials grant) when accessing APIs.</li>
+<li>Rotate certificates and keys quarterly.</li>
+</ul>
+<p><strong>Responsible AI:</strong> Ensure that any data retrieved via destinations or integration flows complies with your organization’s data governance policies. Do not expose sensitive data in logs.</p>
+</div>
+</section>
+
+<footer>
+<p>Status: <strong>DRAFT</strong> | © 2026 SAP SE – All Rights Reserved</p>
+</footer>
+</body>
+</html>

@@ -1,4 +1,4 @@
-﻿const fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 const { callAI } = require('../core/ai-engine');
 const context = require('../core/context');
@@ -8,6 +8,16 @@ const { v4: uuidv4 } = require('uuid');
 
 const AGENTS_DIR = path.join(__dirname, '../../agents');
 const DATA_DIR = process.env.DATA_DIR || './data';
+
+function stripMarkdown(text) {
+  if (!text) return text;
+  // Remove markdown code fences
+  let t = text.trim();
+  if (t.startsWith('```html')) t = t.slice(7);
+  else if (t.startsWith('```')) t = t.slice(3);
+  if (t.endsWith('```')) t = t.slice(0, -3);
+  return t.trim();
+}
 
 function loadAllAgents() {
   const agents = [];
@@ -24,10 +34,9 @@ function loadAllAgents() {
       if (fs.existsSync(formPath)) manifest.form = JSON.parse(fs.readFileSync(formPath, 'utf8'));
       agents.push(manifest);
     } catch(e) {
-      logger.warn(`Failed to load agent ${dir.name}: ${e.message}`, { category: 'agents' });
+      logger.warn('Failed to load agent ' + dir.name + ': ' + e.message, { category: 'agents' });
     }
   }
-  // Also load runtime agents from DB
   const runtimeAgents = db.prepare("SELECT * FROM agents WHERE type IN ('runtime','learned') AND status = 'active'").all();
   for (const agent of runtimeAgents) {
     try {
@@ -46,83 +55,70 @@ function getAgent(agentId) {
 
 async function runAgent(agentId, formData, projectId, jobId, onEvent) {
   const agent = getAgent(agentId);
-  if (!agent) throw new Error(`Agent not found: ${agentId}`);
-  logger.info(`Running agent: ${agentId}`, { jobId, projectId, agentId, category: 'agent-runner' });
-  onEvent('status', { message: `Starting ${agent.name}...` });
+  if (!agent) throw new Error('Agent not found: ' + agentId);
+  logger.info('Running agent: ' + agentId, { jobId, projectId, agentId, category: 'agent-runner' });
+  onEvent('status', { message: 'Starting ' + agent.name + '...' });
 
-  // Build prompt
   const projectContext = projectId ? context.getAll(projectId) : {};
-  const systemPrompt = agent.prompt || `You are ${agent.name}. ${agent.description || ''}`;
+  const systemPrompt = agent.prompt || ('You are ' + agent.name + '. ' + (agent.description || ''));
   const userPrompt = buildPrompt(agent, formData, projectContext);
 
   onEvent('status', { message: 'Calling AI engine...' });
   const output = await callAI(userPrompt, systemPrompt, { maxTokens: agent.maxTokens || 8000 });
 
-  // Extract HTML if present, otherwise wrap in HTML
-  const html = output.includes('<!DOCTYPE') || output.includes('<html')
-    ? output
-    : wrapInHtml(output, agent, formData);
+  const cleaned = stripMarkdown(output);
+  const html = cleaned.includes('<!DOCTYPE') || cleaned.includes('<html')
+    ? cleaned
+    : wrapInHtml(cleaned, agent, formData);
 
-  // Save document
   const docId = uuidv4();
-  const fileName = `${agentId}_v${Date.now()}.html`;
+  const fileName = agentId + '_v' + Date.now() + '.html';
   const projectDir = projectId ? path.join(DATA_DIR, 'projects', projectId) : path.join(DATA_DIR, 'projects', 'general');
   if (!fs.existsSync(projectDir)) fs.mkdirSync(projectDir, { recursive: true });
   const filePath = path.join(projectDir, fileName);
   fs.writeFileSync(filePath, html);
 
-  // Save to DB
-  const version = db.prepare('SELECT COUNT(*) as count FROM documents WHERE project_id = ? AND agent_id = ?').get(projectId, agentId)?.count + 1 || 1;
-  db.prepare(`INSERT INTO documents (id, project_id, job_id, agent_id, agent_name, file_path, file_name, version, status, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'draft', datetime('now'))`)
+  const countRow = db.prepare('SELECT COUNT(*) as count FROM documents WHERE project_id = ? AND agent_id = ?').get(projectId, agentId);
+  const version = (countRow ? countRow.count : 0) + 1;
+  db.prepare('INSERT INTO documents (id, project_id, job_id, agent_id, agent_name, file_path, file_name, version, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, \'draft\', datetime(\'now\'))')
     .run(docId, projectId || null, jobId, agentId, agent.name, filePath, fileName);
 
-  // Store in context for other agents
   if (projectId) context.set(projectId, agentId, { fileName, filePath, summary: output.substring(0, 500) }, agentId);
 
   onEvent('complete', { html, fileName, docId, agentName: agent.name });
-  logger.info(`Agent completed: ${agentId}`, { jobId, projectId, agentId, category: 'agent-runner' });
+  logger.info('Agent completed: ' + agentId, { jobId, projectId, agentId, category: 'agent-runner' });
   return { html, fileName, docId };
 }
 
 function buildPrompt(agent, formData, projectContext) {
   let prompt = '';
-  if (formData.projectName) prompt += `Project: ${formData.projectName}\n`;
-  if (formData.client) prompt += `Client: ${formData.client}\n`;
-  if (formData.processName) prompt += `Process: ${formData.processName}\n`;
-  if (formData.description) prompt += `\nDescription:\n${formData.description}\n`;
+  if (formData.projectName) prompt += 'Project: ' + formData.projectName + '\n';
+  if (formData.client) prompt += 'Client: ' + formData.client + '\n';
+  if (formData.processName) prompt += 'Process: ' + formData.processName + '\n';
+  if (formData.description) prompt += '\nDescription:\n' + formData.description + '\n';
+  if (formData.task) prompt += '\nTask:\n' + formData.task + '\n';
   if (formData.uploadedFile) {
     prompt += '\n\n--- ATTACHED FILE: ' + formData.uploadedFile.name + ' ---\n';
     prompt += formData.uploadedFile.content ? formData.uploadedFile.content.substring(0, 3000) : '(binary file)';
     prompt += '\n--- END FILE ---\n';
   }
-    if (Object.keys(projectContext).length > 0) {
-    prompt += `\nExisting project context (from other agents):\n`;
+  if (Object.keys(projectContext).length > 0) {
+    prompt += '\nExisting project context (from other agents):\n';
     for (const [key, val] of Object.entries(projectContext)) {
-      if (val?.summary) prompt += `${key}: ${val.summary}\n`;
+      if (val && val.summary) prompt += key + ': ' + val.summary + '\n';
     }
   }
-  // Add any custom form fields
   for (const [key, val] of Object.entries(formData)) {
-    if (!['projectName', 'client', 'processName', 'description'].includes(key) && val) {
-      prompt += `${key}: ${val}\n`;
+    if (!['projectName','client','processName','description','task','uploadedFile'].includes(key) && val && typeof val === 'string') {
+      prompt += key + ': ' + val + '\n';
     }
   }
-  prompt += `\nGenerate a complete, professional document in HTML format. Include proper styling, tables, and structure. Mark as DRAFT status.`;
+  prompt += '\nGenerate a complete, professional document in HTML format. Return ONLY the HTML, no markdown fences. Include proper styling, tables, and structure. Mark as DRAFT status.';
   return prompt;
 }
 
 function wrapInHtml(content, agent, formData) {
-  return `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>${agent.name}</title>
-<style>body{font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:20px;line-height:1.6}h1{color:#0070F2}h2{color:#333;border-bottom:2px solid #0070F2;padding-bottom:8px}table{width:100%;border-collapse:collapse;margin:16px 0}th{background:#0070F2;color:white;padding:10px}td{border:1px solid #e2e8f0;padding:8px}.badge{background:#fef3c7;color:#92400e;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:bold}</style>
-</head><body>
-<h1>${agent.name} <span class="badge">DRAFT</span></h1>
-<p><strong>Project:</strong> ${formData.projectName || 'N/A'} | <strong>Client:</strong> ${formData.client || 'N/A'}</p>
-<p><strong>Generated:</strong> ${new Date().toLocaleString()}</p>
-<hr/>
-${content.replace(/\n/g, '<br/>')}
-</body></html>`;
+  return '<!DOCTYPE html>\n<html><head><meta charset="UTF-8"><title>' + agent.name + '</title>\n<style>body{font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:20px;line-height:1.6}h1{color:#0070F2}h2{color:#333;border-bottom:2px solid #0070F2;padding-bottom:8px}table{width:100%;border-collapse:collapse;margin:16px 0}th{background:#0070F2;color:white;padding:10px}td{border:1px solid #e2e8f0;padding:8px}.badge{background:#fef3c7;color:#92400e;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:bold}</style>\n</head><body>\n<h1>' + agent.name + ' <span class="badge">DRAFT</span></h1>\n<p><strong>Project:</strong> ' + (formData.projectName || 'N/A') + ' | <strong>Client:</strong> ' + (formData.client || 'N/A') + '</p>\n<p><strong>Generated:</strong> ' + new Date().toLocaleString() + '</p>\n<hr/>\n' + content.replace(/\n/g, '<br/>') + '\n</body></html>';
 }
 
 module.exports = { loadAllAgents, getAgent, runAgent };
