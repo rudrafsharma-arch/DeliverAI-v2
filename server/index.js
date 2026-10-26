@@ -321,27 +321,24 @@ app.post('/api/architect/chat', async (req, res) => {
   try {
     logger.info('Architect chat: ' + message.substring(0, 50), { projectId, category: 'architect' });
     const result = await architect.chat(message, projectId, history || []);
-    // If architect decided to run an agent, execute it
-    // Only run agent if user explicitly asked for an action
-    const actionWords = ['run','execute','generate','create','provision','deploy','do it','trigger'];
+    const actionWords = ['run', 'execute', 'generate', 'create', 'provision', 'deploy', 'trigger', 'do it', 'list'];
     const userWantsAction = actionWords.some(w => message.toLowerCase().includes(w));
     if (result.action && result.action.type === 'run_agent' && userWantsAction) {
+      const { agentId, task } = result.action;
       const agentRunner = require('./agents/runner');
       const agent = agentRunner.getAgent(agentId);
-      if (agent) {
-        const jobId = require('./core/job-manager').createJob(agentId, agent.name, projectId, { task, description: task }, 'api');
-        res.json({ message: result.text, action: result.action, jobId });
-        // Run agent in background
-        require('./core/job-manager').startJob(jobId, async (id, onEvent) => {
-          return agentRunner.runAgent(agentId, { task, description: task }, projectId, id, onEvent);
-        });
+      if (agent && agentId) {
+        const jobMgr = require('./core/job-manager');
+        const jobId = jobMgr.createJob(agentId, agent.name, projectId, { task: task || message, description: task || message }, 'api');
+        jobMgr.startJob(jobId, async (id, onEvent) => agentRunner.runAgent(agentId, { task: task || message, description: task || message }, projectId, id, onEvent));
+        res.json({ message: result.text || 'Running ' + agent.name + '...', action: result.action, jobId });
         return;
       }
     }
-    res.json({ message: result.text || result });
+    res.json({ message: result.text || 'How can I help?' });
   } catch(e) {
     logger.error('Architect error: ' + e.message, { category: 'architect' });
-    res.status(500).json({ error: e.message, message: 'Sorry, I encountered an error: ' + e.message });
+    res.json({ message: 'Sorry, I had an error: ' + e.message });
   }
 });
 
