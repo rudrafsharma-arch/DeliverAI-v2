@@ -4145,5 +4145,192 @@
     "metadata": "{\"tool\":\"EnvironmentInstance-list\"}",
     "created_at": "2026-10-26T17:58:05.277Z",
     "updated_at": "2026-10-26T17:58:05.279Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "server",
+    "message": "DeliverAI v2 running on port 3005",
+    "metadata": "{}",
+    "created_at": "2026-10-26T18:03:47.961Z",
+    "updated_at": "2026-10-26T18:03:47.964Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "server",
+    "message": "AI Engine: groq",
+    "metadata": "{}",
+    "created_at": "2026-10-26T18:03:47.966Z",
+    "updated_at": "2026-10-26T18:03:47.966Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client connected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T18:03:51.122Z",
+    "updated_at": "2026-10-26T18:03:51.123Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client connected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T18:03:51.136Z",
+    "updated_at": "2026-10-26T18:03:51.138Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client connected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T18:03:51.165Z",
+    "updated_at": "2026-10-26T18:03:51.166Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client connected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T18:03:51.197Z",
+    "updated_at": "2026-10-26T18:03:51.198Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "ai-engine",
+    "message": "Calling AI engine: groq",
+    "metadata": "{\"engine\":\"groq\"}",
+    "created_at": "2026-10-26T18:04:16.492Z",
+    "updated_at": "2026-10-26T18:04:16.493Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "btp-connector",
+    "message": "BTP tool: GlobalAccountServiceEntitlement-list",
+    "metadata": "{\"tool\":\"GlobalAccountServiceEntitlement-list\"}",
+    "created_at": "2026-10-26T18:04:18.792Z",
+    "updated_at": "2026-10-26T18:04:18.793Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "btp-connector",
+    "message": "BTP tool: EnvironmentInstance-list",
+    "metadata": "{\"tool\":\"EnvironmentInstance-list\"}",
+    "created_at": "2026-10-26T18:04:20.035Z",
+    "updated_at": "2026-10-26T18:04:20.036Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "ai-engine",
+    "message": "Calling AI engine: groq",
+    "metadata": "{\"engine\":\"groq\"}",
+    "created_at": "2026-10-26T18:05:24.653Z",
+    "updated_at": "2026-10-26T18:05:24.654Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "btp-connector",
+    "message": "BTP tool: GlobalAccountServiceEntitlement-list",
+    "metadata": "{\"tool\":\"GlobalAccountServiceEntitlement-list\"}",
+    "created_at": "2026-10-26T18:05:27.510Z",
+    "updated_at": "2026-10-26T18:05:27.511Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "btp-connector",
+    "message": "BTP tool: EnvironmentInstance-list",
+    "metadata": "{\"tool\":\"EnvironmentInstance-list\"}",
+    "created_at": "2026-10-26T18:05:27.717Z",
+    "updated_at": "2026-10-26T18:05:27.718Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client disconnected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T18:12:07.560Z",
+    "updated_at": "2026-10-26T18:12:07.561Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client disconnected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T18:12:07.568Z",
+    "updated_at": "2026-10-26T18:12:07.568Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "architect",
+    "message": "Architect chat: which services are activated on sap btp",
+    "metadata": "{}",
+    "created_at": "2026-10-26T18:27:46.319Z",
+    "updated_at": "2026-10-26T18:27:46.319Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "architect",
+    "message": "Architect: which services are activated on sap btp",
+    "metadata": "{}",
+    "created_at": "2026-10-26T18:27:46.324Z",
+    "updated_at": "2026-10-26T18:27:46.325Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "ai-engine",
+    "message": "Calling AI engine: groq",
+    "metadata": "{\"engine\":\"groq\"}",
+    "created_at": "2026-10-26T18:27:46.329Z",
+    "updated_at": "2026-10-26T18:27:46.330Z"
   }
 ]
