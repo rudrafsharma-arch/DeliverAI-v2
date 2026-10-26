@@ -1,0 +1,380 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DeliverAI Project Document – DRAFT</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:20px;background:#f7f7f7;color:#333}
+    h1,h2,h3{color:#0066a2}
+    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .status{font-weight:bold}
+    a{color:#0066a2;text-decoration:none}
+    a:hover{text-decoration:underline}
+    table{width:100%;border-collapse:collapse;margin:10px 0}
+    th,td{border:1px solid #ccc;padding:8px;text-align:left}
+    th{background:#e0e0e0}
+    .editable{background:#fff;border:1px solid #ccc;padding:4px}
+    input,select{border:none;border-bottom:1px solid #ccc;padding:2px 4px;width:200px;background:transparent;font-size:14px}
+    input[type=date]{width:150px}
+  </style>
+</head>
+<body>
+  <!-- Document Header -->
+  <div class="header">
+    <h1>DeliverAI Project Document</h1>
+    <div>
+      <label>Status: </label>
+      <select class="status">
+        <option>DRAFT</option>
+        <option>APPROVED</option>
+        <option>REJECTED</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Document Metadata -->
+  <p><strong>Project Manager:</strong> <input type="text" placeholder="Enter name"></p>
+  <p><strong>Document Created:</strong> <input type="date"></p>
+  <p><strong>Last Updated:</strong> <input type="date"></p>
+
+  <!-- Table of Contents -->
+  <nav>
+    <h2>Table of Contents</h2>
+    <ul>
+      <li><a href="#executive-summary">1. Executive Summary</a></li>
+      <li><a href="#client-landscape">2. Client Landscape Analysis</a></li>
+      <li><a href="#solution-recommendation">3. Solution Recommendation</a></li>
+      <li><a href="#alternatives">4. Alternative Options</a></li>
+      <li><a href="#cost-analysis">5. Cost Analysis</a></li>
+      <li><a href="#hld">6. High Level Design</a></li>
+      <li><a href="#lld">7. Low Level Design</a></li>
+      <li><a href="#agent-plan">8. Agent Execution Plan</a></li>
+      <li><a href="#runtime-agents">9. Runtime Agents Created</a></li>
+      <li><a href="#risk-register">10. Risk Register</a></li>
+      <li><a href="#timeline">11. Timeline</a></li>
+      <li><a href="#next-steps">12. Next Steps</a></li>
+    </ul>
+  </nav>
+
+  <!-- 1. Executive Summary -->
+  <section id="executive-summary">
+    <h2>1. Executive Summary</h2>
+    <p><strong>Executive Summary</strong> – <em>Placeholder text – brief overview of the project scope, goals, and key deliverables.</em></p>
+  </section>
+
+  <!-- 2. Client Landscape Analysis -->
+  <section id="client-landscape">
+    <h2>2. Client Landscape Analysis</h2>
+    <p><strong>Current System:</strong> <input type="text" placeholder="e.g., ECC, S/4HANA Cloud"></p>
+    <p><strong>Existing Licenses:</strong> <input type="text" placeholder="e.g., BTP, SAP Build"></p>
+    <p><strong>Industry:</strong> <input type="text" placeholder="e.g., Manufacturing"></p>
+    <p><strong>Budget:</strong> <input type="text" placeholder="e.g., USD 1M"></p>
+    <p><strong>Timeline:</strong> <input type="date"> to <input type="date"></p>
+    <p><strong>Team Size:</strong> <input type="text" placeholder="e.g., 10"></p>
+  </section>
+
+  <!-- 3. Solution Recommendation -->
+  <section id="solution-recommendation">
+    <h2>3. Solution Recommendation</h2>
+    <p><strong>Recommended Solution:</strong> <input type="text" placeholder="e.g., S/4HANA Private Cloud with CAP extension"></p>
+    <p><strong>Rationale:</strong> <em>Placeholder – brief justification based on analysis.</em></p>
+  </section>
+
+  <!-- 4. Alternative Options -->
+  <section id="alternatives">
+    <h2>4. Alternative Options</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Option</th>
+          <th>Pros</th>
+          <th>Cons</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Option 1</td>
+          <td>Pro 1, Pro 2</td>
+          <td>Con 1, Con 2</td>
+        </tr>
+        <tr>
+          <td>Option 2</td>
+          <td>Pro A, Pro B</td>
+          <td>Con A, Con B</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 5. Cost Analysis -->
+  <section id="cost-analysis">
+    <h2>5. Cost Analysis – 5-Year TCO</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Year 1</th>
+          <th>Year 2</th>
+          <th>Year 3</th>
+          <th>Year 4</th>
+          <th>Year 5</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Implementation</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>Licensing</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>Infrastructure</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>Maintenance</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td><strong>Total TCO</strong></td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Note: <em>Existing licenses, SAP standard functionality, Accenture accelerators, and BTP free tier services should be factored in.</em></p>
+  </section>
+
+  <!-- 6. High Level Design -->
+  <section id="hld">
+    <h2>6. High Level Design</h2>
+    <p><strong>Landscape:</strong> <em>Placeholder – diagram or description of the system landscape.</em></p>
+    <p><strong>Integration Architecture:</strong> <em>Placeholder – integration points, middleware, API management.</em></p>
+    <p><strong>Data Flow:</strong> <em>Placeholder – high-level data movement.</em></p>
+    <p><strong>Security Concept:</strong> <em>Placeholder – authentication, authorisation, data protection.</em></p>
+  </section>
+
+  <!-- 7. Low Level Design -->
+  <section id="lld">
+    <h2>7. Low Level Design</h2>
+    <p><strong>Technical Objects:</strong> <em>Placeholder – CAP services, iFlows, ABAP objects.</em></p>
+    <p><strong>Interface Specs:</strong> <em>Placeholder – interface definitions, message formats.</em></p>
+    <p><strong>Data Mapping:</strong> <em>Placeholder – source‑to‑target mapping tables.</em></p>
+    <p><strong>Error Handling:</strong> <em>Placeholder – exception strategy, monitoring.</em></p>
+    <p><strong>Transport Strategy:</strong> <em>Placeholder – transport layers, release management.</em></p>
+  </section>
+
+  <!-- 8. Agent Execution Plan -->
+  <section id="agent-plan">
+    <h2>8. Agent Execution Plan</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Agent</th>
+          <th>Phase</th>
+          <th>Dependencies</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>blueprint</td>
+          <td>Phase 1</td>
+          <td>–</td>
+          <td><select><option>Pending</option><option>Completed</option></select></td>
+        </tr>
+        <tr>
+          <td>functional-spec</td>
+          <td>Phase 2</td>
+          <td>blueprint</td>
+          <td><select><option>Pending</option><option>Completed</option></select></td>
+        </tr>
+        <tr>
+          <td>technical-spec</td>
+          <td>Phase 3</td>
+          <td>functional-spec</td>
+          <td><select><option>Pending</option><option>Completed</option></select></td>
+        </tr>
+        <tr>
+          <td>iflow-builder</td>
+          <td>Phase 3</td>
+          <td>technical-spec</td>
+          <td><select><option>Pending</option><option>Completed</option></select></td>
+        </tr>
+        <tr>
+          <td>cap-service-builder</td>
+          <td>Phase 3</td>
+          <td>technical-spec</td>
+          <td><select><option>Pending</option><option>Completed</option></select></td>
+        </tr>
+        <tr>
+          <td>test-scripts</td>
+          <td>Phase 4</td>
+          <td>technical-spec</td>
+          <td><select><option>Pending</option><option>Completed</option></select></td>
+        </tr>
+        <tr>
+          <td>config-doc</td>
+          <td>Phase 4</td>
+          <td>technical-spec</td>
+          <td><select><option>Pending</option><option>Completed</option></select></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 9. Runtime Agents Created -->
+  <section id="runtime-agents">
+    <h2>9. Runtime Agents Created</h2>
+    <p><strong>No runtime agents required for this template.</strong></p>
+  </section>
+
+  <!-- 10. Risk Register -->
+  <section id="risk-register">
+    <h2>10. Risk Register – Top 5</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Risk ID</th>
+          <th>Risk Description</th>
+          <th>Impact</th>
+          <th>Likelihood</th>
+          <th>Mitigation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>R001</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>R002</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>R003</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>R004</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>R005</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 11. Timeline -->
+  <section id="timeline">
+    <h2>11. Timeline – Phase Breakdown</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Deliverables</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Phase 1</td>
+          <td>–</td>
+          <td>–</td>
+          <td>Blueprint, HLD</td>
+        </tr>
+        <tr>
+          <td>Phase 2</td>
+          <td>–</td>
+          <td>–</td>
+          <td>Functional Spec</td>
+        </tr>
+        <tr>
+          <td>Phase 3</td>
+          <td>–</td>
+          <td>–</td>
+          <td>Technical Spec, iFlow, CAP, ABAP</td>
+        </tr>
+        <tr>
+          <td>Phase 4</td>
+          <td>–</td>
+          <td>–</td>
+          <td>Test Scripts, Config Doc, RICEFW</td>
+        </tr>
+        <tr>
+          <td>Phase 5</td>
+          <td>–</td>
+          <td>–</td>
+          <td>Cutover Plan, Project Summary</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 12. Next Steps -->
+  <section id="next-steps">
+    <h2>12. Next Steps</h2>
+    <p><strong>Immediate Actions:</strong> <input type="text" placeholder="e.g., Approve blueprint"></p>
+    <p><strong>Upcoming Milestone:</strong> <input type="text" placeholder="e.g., Functional Spec sign-off"></p>
+    <p><strong>Owner:</strong> <input type="text" placeholder="e.g., Project Manager"></p>
+  </section>
+
+</body>
+</html>
+```
+
+**How to use this template**
+
+1. **Populate all sections** – Replace placeholder text and “–” marks with real data from the project.
+2. **Add editable fields** – Every field that requires input should be an `<input>` or `<select>` element so stakeholders can fill it directly.
+3. **Link to DeliverAI agents** – If you plan to run specific agents (e.g., `blueprint`, `functional-spec`), insert their execution status in the *Agent Execution Plan* table.
+4. **Track status** – Use the `<select>` dropdowns to mark each agent as *Pending* or *Completed*.
+5. **Save and share** – Once edited, the HTML can be saved and shared with the project team.
+
+The document is marked as **DRAFT** by default but can be changed via the status dropdown at the top. Feel free to extend or modify the tables to suit your specific project needs.

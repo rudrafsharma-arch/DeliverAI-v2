@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ABAP RAP Development Document</title>
+<style>
+body {font-family: Arial, sans-serif; margin: 20px; color: #333;}
+h1, h2, h3 {color: #004080;}
+table {border-collapse: collapse; width: 100%; margin-bottom: 20px;}
+th, td {border: 1px solid #ccc; padding: 8px; text-align: left;}
+th {background-color: #f2f2f2;}
+input[type="text"], input[type="date"], select {border: none; border-bottom: 1px solid #ccc; font-size: 12px; background: transparent; width: 100%;}
+input[type="text"] {width: 120px;}
+</style>
+</head>
+<body>
+
+<h1>ABAP RAP Development Document</h1>
+<p><strong>Document Status:</strong> <input type="text" placeholder="DRAFT" value="DRAFT"></p>
+
+<!-- 1. Document Control Table -->
+<h2>1. Document Control Table</h2>
+<table>
+<tr><th>Document ID</th><td><input type="text" placeholder="assign"></td></tr>
+<tr><th>Version</th><td><input type="text" placeholder="assign"></td></tr>
+<tr><th>Created By</th><td><input type="text" placeholder="assign"></td></tr>
+<tr><th>Created On</th><td><input type="date"></td></tr>
+<tr><th>Last Modified By</th><td><input type="text" placeholder="assign"></td></tr>
+<tr><th>Last Modified On</th><td><input type="date"></td></tr>
+<tr><th>Project</th><td><input type="text" placeholder="assign"></td></tr>
+<tr><th>Client</th><td><input type="text" placeholder="assign"></td></tr>
+<tr><th>System</th><td><input type="text" placeholder="assign"></td></tr>
+<tr><th>Module</th><td><input type="text" placeholder="assign"></td></tr>
+<tr><th>Object Type</th><td><input type="text" placeholder="assign"></td></tr>
+<tr><th>Process</th><td><input type="text" placeholder="assign"></td></tr>
+<tr><th>Prepared By</th><td><input type="text" placeholder="assign"></td></tr>
+<tr><th>Approved By</th><td><input type="text" placeholder="assign"></td></tr>
+<tr><th>Approval Date</th><td><input type="date"></td></tr>
+</table>
+
+<!-- 2. AI Generated Notice -->
+<h2>2. AI Generated Notice</h2>
+<p style="color:red;">AI-GENERATED DOCUMENT - Requires review and approval by qualified consultants before use.</p>
+
+<!-- 3. Development Overview -->
+<h2>3. Development Overview</h2>
+<h3>Object List</h3>
+<table>
+<tr><th>Object Name</th><th>Type</th><th>Package</th></tr>
+<tr><td>ZCL_<i>BehaviourHandler</i></td><td>Class</td><td>Z_RAP_<i>Module</i></td></tr>
+<tr><td>ZIF_<i>BehaviourInterface</i></td><td>Interface</td><td>Z_RAP_<i>Module</i></td></tr>
+<tr><td>ZSD_<i>BusinessObject</i></td><td>Data Element</td><td>Z_RAP_<i>Module</i></td></tr>
+<tr><td>ZFI_<i>Table</i></td><td>Table</td><td>Z_RAP_<i>Module</i></td></tr>
+<tr><td>ZC_<i>BusinessObject</i></td><td>CDS View</td><td>Z_RAP_<i>Module</i></td></tr>
+<tr><td>ZI_<i>BusinessObject</i></td><td>CDS View</td><td>Z_RAP_<i>Module</i></td></tr>
+</table>
+
+<h3>Development Approach</h3>
+<p>RAP (RESTful ABAP Programming) is used for all new development. Classic ABAP is not applied.</p>
+
+<h3>Dependencies and Prerequisites</h3>
+<ul>
+<li>ABAP Release 7.54 or higher.</li>
+<li>OData V4 support.</li>
+<li>Enable RAP Development in system profile.</li>
+<li>Activate required SAP Fiori libraries.</li>
+<li>Enable SAP ABAP Unit and SAP Test Suite for unit testing.</li>
+</ul>
+
+<!-- 4. Database Table Definition -->
+<h2>4. Database Table Definition</h2>
+<h3>ABAP Dictionary Table</h3>
+<table>
+<tr><th>Field</th><th>Type</th><th>Length</th><th>Description</th></tr>
+<tr><td>OBJ_ID</td><td>CHAR</td><td>10</td><td>Business Object ID</td></tr>
+<tr><td>OBJ_NAME</td><td>CHAR</td><td>30</td><td>Business Object Name</td></tr>
+<tr><td>CREATED_BY</td><td>CHAR</td><td>12</td><td>Creator</td></tr>
+<tr><td>CREATED_ON</td><td>DATE</td><td>8</td><td>Creation Date</td></tr>
+<tr><td>CHANGED_BY</td><td>CHAR</td><td>12</td><td>Last Modifier</td></tr>
+<tr><td>CHANGED_ON</td><td>DATE</td><td>8</td><td>Last Changed Date</td></tr>
+<tr><td>STATUS</td><td>CHAR</td><td>20</td><td>Object Status</td></tr>
+</table>
+
+<h3>Enhancement Category</h3>
+<p>None required for this table.</p>
+
+<!-- 5. CDS View Layer for RAP -->
+<h2>5. CDS View Layer for RAP</h2>
+<h3>Interface View ZI_</h3>
+<pre>
+@AbapCatalog.sqlViewName: 'ZIVIEW'
+@AbapCatalog.compiler.compareFilter: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Z Interface View'
+define view ZI_BusinessObject
+  with parameters
+    p_active as abap.bool
+{
+  key OBJ_ID      as Id,
+       OBJ_NAME    as Name,
+       CREATED_ON  as Created,
+       CHANGED_ON  as Changed,
+       STATUS      as Status
+}
+where p_active = true;
+</pre>
+
+<h3>Projection View ZC_ with UI Annotations</h3>
+<pre>
+@AbapCatalog.sqlViewName: 'ZCVIEW'
+@AbapCatalog.compiler.compareFilter: true
+@EndUserText.label: 'Z Projection View'
+@UI.dataCategory: #DYNAMIC
+@UI.lineItem: [
+  { position: 1, label: 'Object ID',   importance: #HIGH   },
+  { position: 2, label: 'Object Name', importance: #HIGH   },
+  { position: 3, label: 'Created On',  importance: #MEDIUM },
+  { position: 4, label: 'Status',      importance: #MEDIUM }
+]
+define view ZC_BusinessObject
+  as select from ZI_BusinessObject
+{
+  key Id      as OBJ_ID,
+       Name    as OBJ_NAME,
+       Created as CREATED_ON,
+       Status  as OBJ_STATUS
+}
+</pre>
+
+<h3>Metadata Extension for Fiori</h3>
+<p>No additional metadata extensions are required for this implementation.</p>
+
+<!-- 6. Behaviour Definition -->
+<h2>6. Behaviour Definition</h2>
+<h3>Managed Declaration</h3>
+<p>The Business Object is declared as Managed.</p>
+
+<h3>Operations</h3>
+<ul>
+<li>Create</li>
+<li>Update</li>
+<li>Delete</li>
+</ul>
+
+<h3>Actions</h3>
+<table>
+<tr><th>Action Name</th><th>Parameters</th></tr>
+<tr><td>SetStatus</td><td>Status: abap.char[20]</td></tr>
+</table>
+
+<h3>Validations</h3>
+<ul>
+<li>Check mandatory fields on create.</li>
+<li>Validate status transitions.</li>
+</ul>
+
+<h3>Determinations</h3>
+<ul>
+<li>Determine CreatedBy and CreatedOn on create.</li>
+</ul>
+
+<h3>Draft Handling</h3>
+<p>Draft functionality is enabled with standard RAP mechanisms.</p>
+
+<!-- 7. Behaviour Implementation -->
+<h2>7. Behaviour Implementation</h2>
+<h3>Handler Class Methods</h3>
+<pre>
+class ZCL_BusinessObject_BEHAVIOR definition
+  public
+  create
+  final
+  implement ZIF_BusinessObject_Behavior.
+
+methods:
+  on_create for events create
+    returning result,
+  on_update for events update
+    returning result,
+  on_delete for events delete
+    returning result,
+  validate
+    for events validate,
+  action_set_status
+    for events action
+    returning result.
+</pre>
+
+<h3>Validation Logic</h3>
+<p>All validations raise class-based exceptions (e.g., CX_BusinessObject_Validation).</p>
+
+<h3>Action Implementations</h3>
+<p>SetStatus action updates the status field and logs the change.</p>
+
+<h3>Error Handling</h3>
+<p>All errors are thrown using class-based exceptions with detailed messages.</p>
+
+<!-- 8. Service Definition and Binding -->
+<h2>8. Service Definition and Binding</h2>
+<h3>OData V4 Service Definition</h3>
+<p>Service name: Z_SRV_BusinessObject</p>
+<p>Root entity: ZC_BusinessObject</p>
+
+<h3>Service Binding Configuration</h3>
+<p>Service binding is enabled in the SAP Gateway server configuration for the package Z_RAP_<i>Module</i>.</p>
+
+<!-- 9. Unit Test Class -->
+<h2>9. Unit Test Class</h2>
+<h3>ABAP Unit Test Methods</h3>
+<pre>
+class ZCL_BusinessObject_TST definition
+  for testing.
+
+methods: test_create
+  for testing
+  raising CX_STATIC_CHECK,
+  test_update
+  for testing
+  raising CX_STATIC_CHECK,
+  test_validation
+  for testing
+  raising CX_STATIC_CHECK.
+
+private section.
+methods: setup_data.
+</pre>
+
+<h3>Test Data Setup</h3>
+<p>Test data is created in the setup_data method using in-memory instances.</p>
+
+<h3>Assertions</h3>
+<p>Assertions check the correctness of created, updated, and validated objects.</p>
+
+<!-- 10. Transport Checklist -->
+<h2>10. Transport Checklist</h2>
+<ul>
+<li>All objects are in package Z_RAP_<i>Module</i>.</li>
+<li>Transport request includes: class, interface, views, table, service definition.</li>
+<li>Test class included in the transport request.</li>
+<li>Check for missing authorizations and dependencies.</li>
+</ul>
+
+<!-- 11. Code Review Checklist -->
+<h2>11. Code Review Checklist</h2>
+<ul>
+<li>Code follows RAP best practices.</li>
+<li>No SELECT inside loops.</li>
+<li>All exceptions are class-based.</li>
+<li>Inline declarations used.</li>
+<li>Comments for non-obvious logic present.</li>
+<li>Performance analyzed with SAT.</li>
+</ul>
+
+<!-- Sign-Off Section -->
+<h2>Sign-Off</h2>
+<table>
+<tr><th>Name</th><th>Role</th><th>Date</th><th>Signature</th></tr>
+<tr>
+  <td><input type="text" placeholder="assign"></td>
+  <td><input type="text" placeholder="assign"></td>
+  <td><input type="date"></td>
+  <td><input type="text" placeholder="assign"></td>
+</tr>
+</table>
+
+<!-- Open Issues -->
+<h2>Open Issues</h2>
+<table>
+<tr><th>Issue ID</th><th>Description</th><th>Assignee</th><th>Target Date</th></tr>
+<tr>
+  <td><input type="text" placeholder="assign"></td>
+  <td><input type="text" placeholder="assign"></td>
+  <td><input type="text" placeholder="assign"></td>
+  <td><input type="date"></td>
+</tr>
+</table>
+
+</body>
+</html>

@@ -3,9 +3,9 @@ const path = require('path');
 const fs = require('fs');
 const logger = require('../observability/logger');
 
-async function callAI(prompt, systemPrompt = '', options = {}) {
+async function callAI(prompt, systemPrompt, options) {
   const engine = options.engine || process.env.AI_ENGINE || 'claude-code-cli';
-  logger.info(`Calling AI engine: ${engine}`, { category: 'ai-engine', metadata: { engine, model: options.model } });
+  logger.info('Calling AI engine: ' + engine, { category: 'ai-engine', metadata: { engine } });
   try {
     if (engine === 'groq' && process.env.GROQ_API_KEY) return await callGroq(prompt, systemPrompt, options);
     if (engine === 'gemini' && process.env.GEMINI_API_KEY) return await callGemini(prompt, systemPrompt, options);
@@ -14,43 +14,65 @@ async function callAI(prompt, systemPrompt = '', options = {}) {
     if (engine === 'sap-ai-core' && process.env.SAP_AI_CORE_KEY) return await callSAPAICore(prompt, systemPrompt, options);
     return await callClaudeCLI(prompt, systemPrompt, options);
   } catch(e) {
-    logger.error(`AI engine error: ${e.message}`, { category: 'ai-engine', metadata: { engine, error: e.message } });
+    logger.error('AI engine error: ' + e.message, { category: 'ai-engine', metadata: { engine, error: e.message } });
     throw e;
   }
 }
 
 async function callGroq(prompt, systemPrompt, options) {
-  const model = options.model || process.env.GROQ_MODEL || 'qwen/qwen3.8-27b';
-  const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.GROQ_API_KEY}` },
-    body: JSON.stringify({
-      model, max_tokens: options.maxTokens || 8000,
-      messages: [
-        ...(systemPrompt ? [{ role: 'system', content: systemPrompt }] : []),
-        { role: 'user', content: prompt }
-      ]
-    })
-  });
-  if (!r.ok) throw new Error(`Groq error: ${r.status} ${await r.text()}`);
-  const d = await r.json();
-  return d.choices?.[0]?.message?.content || '';
+  const model = options.model || process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
+  console.log('[GROQ] model:', model);
+  const controller = new AbortController();
+  const tid = setTimeout(() => { controller.abort(); }, 30000);
+  try {
+    const body = {
+      model: model,
+      max_tokens: options.maxTokens || 2000,
+      messages: []
+    };
+    if (systemPrompt) body.messages.push({ role: 'system', content: systemPrompt });
+    body.messages.push({ role: 'user', content: prompt });
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      signal: controller.signal,
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + process.env.GROQ_API_KEY },
+      body: JSON.stringify(body)
+    });
+    clearTimeout(tid);
+    if (!r.ok) {
+      const errText = await r.text();
+      throw new Error('Groq error: ' + r.status + ' ' + errText);
+    }
+    const d = await r.json();
+    console.log('[GROQ] response received');
+    const msg = (d.choices && d.choices[0] && d.choices[0].message) ? d.choices[0].message : {};
+    const content = msg.content || msg.reasoning || '';
+    // Strip <think> tags from reasoning models
+    if (content.indexOf('</think>') !== -1) {
+      return content.split('</think>').pop().trim();
+    }
+    return content.trim();
+  } catch(e) {
+    clearTimeout(tid);
+    throw e;
+  }
 }
 
 async function callGemini(prompt, systemPrompt, options) {
   const model = options.model || process.env.GEMINI_MODEL || 'gemini-3.5-flash';
   const key = process.env.GEMINI_API_KEY;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + key;
   const contents = [];
   if (systemPrompt) contents.push({ role: 'user', parts: [{ text: systemPrompt }] });
   contents.push({ role: 'user', parts: [{ text: prompt }] });
   const r = await fetch(url, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contents, generationConfig: { maxOutputTokens: options.maxTokens || 8000 } })
   });
-  if (!r.ok) throw new Error(`Gemini error: ${r.status} ${await r.text()}`);
+  if (!r.ok) throw new Error('Gemini error: ' + r.status + ' ' + await r.text());
   const d = await r.json();
-  return d.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  return (d.candidates && d.candidates[0] && d.candidates[0].content && d.candidates[0].content.parts && d.candidates[0].content.parts[0]) ? d.candidates[0].content.parts[0].text : '';
 }
 
 async function callAnthropic(prompt, systemPrompt, options) {
@@ -60,19 +82,19 @@ async function callAnthropic(prompt, systemPrompt, options) {
     headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
     body: JSON.stringify({
       model, max_tokens: options.maxTokens || 8000,
-      ...(systemPrompt ? { system: systemPrompt } : {}),
+      system: systemPrompt || '',
       messages: [{ role: 'user', content: prompt }]
     })
   });
-  if (!r.ok) throw new Error(`Anthropic error: ${r.status} ${await r.text()}`);
+  if (!r.ok) throw new Error('Anthropic error: ' + r.status + ' ' + await r.text());
   const d = await r.json();
-  return d.content?.map(c => c.text || '').join('') || '';
+  return d.content ? d.content.map(function(c) { return c.text || ''; }).join('') : '';
 }
 
 async function callAzure(prompt, systemPrompt, options) {
   const deployment = options.model || process.env.AZURE_OPENAI_DEPLOYMENT || 'gpt-4o';
   const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
-  const r = await fetch(`${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=2024-02-01`, {
+  const r = await fetch(endpoint + '/openai/deployments/' + deployment + '/chat/completions?api-version=2024-02-01', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'api-key': process.env.AZURE_OPENAI_KEY },
     body: JSON.stringify({
@@ -83,17 +105,17 @@ async function callAzure(prompt, systemPrompt, options) {
       ]
     })
   });
-  if (!r.ok) throw new Error(`Azure error: ${r.status} ${await r.text()}`);
+  if (!r.ok) throw new Error('Azure error: ' + r.status + ' ' + await r.text());
   const d = await r.json();
-  return d.choices?.[0]?.message?.content || '';
+  return (d.choices && d.choices[0] && d.choices[0].message) ? d.choices[0].message.content : '';
 }
 
 async function callSAPAICore(prompt, systemPrompt, options) {
   const endpoint = process.env.SAP_AI_CORE_ENDPOINT;
   const deployment = process.env.SAP_AI_CORE_DEPLOYMENT;
-  const r = await fetch(`${endpoint}/v2/inference/deployments/${deployment}/chat/completions`, {
+  const r = await fetch(endpoint + '/v2/inference/deployments/' + deployment + '/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.SAP_AI_CORE_KEY}`, 'AI-Resource-Group': 'default' },
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + process.env.SAP_AI_CORE_KEY, 'AI-Resource-Group': 'default' },
     body: JSON.stringify({
       max_tokens: options.maxTokens || 8000,
       messages: [
@@ -102,24 +124,24 @@ async function callSAPAICore(prompt, systemPrompt, options) {
       ]
     })
   });
-  if (!r.ok) throw new Error(`SAP AI Core error: ${r.status} ${await r.text()}`);
+  if (!r.ok) throw new Error('SAP AI Core error: ' + r.status + ' ' + await r.text());
   const d = await r.json();
-  return d.choices?.[0]?.message?.content || '';
+  return (d.choices && d.choices[0] && d.choices[0].message) ? d.choices[0].message.content : '';
 }
 
 function callClaudeCLI(prompt, systemPrompt, options) {
-  return new Promise((resolve, reject) => {
+  return new Promise(function(resolve, reject) {
     const gitBash = process.env.GIT_BASH_PATH;
     const claudePath = process.env.CLAUDE_PATH;
     if (!gitBash || !claudePath) return reject(new Error('Claude CLI not configured'));
-    const fullPrompt = systemPrompt ? `${systemPrompt}\n\n${prompt}` : prompt;
-    const tmpFile = path.join(process.env.DATA_DIR || './data', `.prompt-${Date.now()}.txt`);
+    const fullPrompt = systemPrompt ? systemPrompt + '\n\n' + prompt : prompt;
+    const tmpFile = path.join(process.env.DATA_DIR || './data', '.prompt-' + Date.now() + '.txt');
     fs.writeFileSync(tmpFile, fullPrompt);
-    const proc = spawn('powershell.exe', ['-Command', `Get-Content "${tmpFile}" | ${claudePath} --print --dangerously-skip-permissions`], { env: process.env });
+    const proc = spawn('powershell.exe', ['-Command', 'Get-Content "' + tmpFile + '" | ' + claudePath + ' --print --dangerously-skip-permissions'], { env: process.env });
     let output = '';
-    proc.stdout.on('data', d => output += d.toString());
-    proc.stderr.on('data', d => logger.debug(d.toString(), { category: 'claude-cli' }));
-    proc.on('close', () => { try { fs.unlinkSync(tmpFile); } catch(e) {} resolve(output); });
+    proc.stdout.on('data', function(d) { output += d.toString(); });
+    proc.stderr.on('data', function(d) { logger.debug(d.toString(), { category: 'claude-cli' }); });
+    proc.on('close', function() { try { fs.unlinkSync(tmpFile); } catch(e) {} resolve(output); });
     proc.on('error', reject);
   });
 }
@@ -136,7 +158,7 @@ function getActiveEngine() {
 
 const ENGINES = [
   { id: 'claude-code-cli', name: 'Claude Code CLI (Accenture)', requiresKey: false },
-  { id: 'groq', name: 'Groq (Free)', requiresKey: true, keyEnv: 'GROQ_API_KEY', models: ['qwen/qwen3.8-27b', 'llama-3.3-70b-versatile'] },
+  { id: 'groq', name: 'Groq (Free)', requiresKey: true, keyEnv: 'GROQ_API_KEY', models: ['openai/gpt-oss-20b', 'qwen/qwen3.8-27b'] },
   { id: 'gemini', name: 'Google Gemini', requiresKey: true, keyEnv: 'GEMINI_API_KEY', models: ['gemini-3.5-flash', 'gemini-1.5-pro'] },
   { id: 'anthropic', name: 'Anthropic API', requiresKey: true, keyEnv: 'ANTHROPIC_API_KEY', models: ['claude-sonnet-4-6', 'claude-opus-4-5'] },
   { id: 'azure-openai', name: 'Azure OpenAI', requiresKey: true, keyEnv: 'AZURE_OPENAI_KEY', models: ['gpt-4o', 'gpt-4o-mini'] },

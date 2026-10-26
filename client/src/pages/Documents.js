@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { api } from '../api';
 
 const BLUE = '#0070F2';
@@ -46,9 +46,9 @@ export default function Documents({ project }) {
           <div key={doc.id} onClick={() => openDoc(doc)}
             style={{ background: '#fff', border: `1px solid ${selected?.id === doc.id ? BLUE : '#e2e8f0'}`, borderRadius: 10, padding: 12, marginBottom: 8, cursor: 'pointer' }}>
             <div style={{ fontWeight: 600, fontSize: 12, color: '#1e293b', marginBottom: 2 }}>{doc.agent_name}</div>
-            <div style={{ fontSize: 11, color: '#94a3b8' }}>v{doc.version} • {new Date(doc.created_at).toLocaleDateString()}</div>
+            <div style={{ fontSize: 11, color: '#94a3b8' }}>v{doc.version} â€¢ {new Date(doc.created_at).toLocaleDateString()}</div>
             <div style={{ fontSize: 10, marginTop: 4, display: 'inline-block', padding: '2px 8px', borderRadius: 4, background: doc.status === 'approved' ? '#f0fdf4' : '#fef3c7', color: doc.status === 'approved' ? '#16a34a' : '#92400e', fontWeight: 600 }}>
-              {doc.status.toUpperCase()}
+              {(doc.status||'draft').toUpperCase()}
             </div>
           </div>
         ))}

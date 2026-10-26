@@ -23,18 +23,9 @@ export default function ArchitectChat({ project, questions, setQuestions }) {
     try {
       const history = messages.map(m => ({ role: m.role === 'architect' ? 'assistant' : 'user', content: m.content }));
       let response = '';
-      await api.streamPost('/api/architect/chat', { message: userMsg, projectId: project?.id, history }, (event) => {
-        if (event.type === 'complete') response = event.message;
-        if (event.type === 'status') setMessages(m => {
-          const last = m[m.length - 1];
-          if (last?.role === 'architect-thinking') return [...m.slice(0, -1), { role: 'architect-thinking', content: event.message }];
-          return [...m, { role: 'architect-thinking', content: event.message }];
-        });
-      });
-      setMessages(m => {
-        const filtered = m.filter(x => x.role !== 'architect-thinking');
-        return [...filtered, { role: 'architect', content: response || 'I processed your request.' }];
-      });
+      const d = await api.post('/api/architect/chat', { message: userMsg, projectId: project?.id, history });
+      response = d.message || d.error || 'No response received';
+      setMessages(m => [...m, { role: 'architect', content: response }]);
     } catch(e) {
       setMessages(m => [...m, { role: 'architect', content: 'Error: ' + e.message }]);
     }

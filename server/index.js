@@ -1,4 +1,4 @@
-﻿require('dotenv').config();
+﻿require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -214,23 +214,33 @@ app.post('/api/run', async (req, res) => {
   const { agentId, projectId, formData, mode } = req.body;
   const agent = agentRunner.getAgent(agentId);
   if (!agent) return res.status(404).json({ error: 'Agent not found' });
-  const jobId = jobManager.createJob(agentId, agent.name, projectId, formData, mode || getActiveEngine() === 'claude-code-cli' ? 'cli' : 'api');
-  const eventBuffer = [];
-  jobManager.startJob(jobId, async (id, onEvent) => {
-    return agentRunner.runAgent(agentId, formData, projectId, id, onEvent);
-  });
-  logger.info(`Job queued: ${jobId} for agent ${agentId}`, { jobId, projectId, agentId, category: 'jobs' });
-  res.json({ jobId, status: 'queued' });
+  const jobId = jobManager.createJob(agentId, agent.name, projectId, formData, mode || (getActiveEngine() === 'claude-code-cli' ? 'cli' : 'api'));
+  // Don't start yet - wait for stream to connect
+  logger.info('Job created: ' + jobId + ' for agent ' + agentId, { jobId, projectId, agentId, category: 'jobs' });
+  res.json({ jobId, status: 'created' });
 });
 
-app.get('/api/run/:jobId/stream', (req, res) => {
+app.get('/api/run/:jobId/stream', async (req, res) => {
   const send = sseSetup(req, res);
   const { jobId } = req.params;
-  const job = jobManager.getJob(jobId);
+  let job = jobManager.getJob(jobId);
+  if (!job) { await new Promise(r=>setTimeout(r,300)); job = jobManager.getJob(jobId); }
+  if (!job) { await new Promise(r=>setTimeout(r,500)); job = jobManager.getJob(jobId); }
   if (!job) { send('error', { message: 'Job not found' }); return res.end(); }
-  send('status', { message: 'Connected to job stream', jobId });
-  const handler = (data) => { if (data.jobId === jobId) send(data.event, data.data); };
+  // Start the job now that stream is connected
+  jobManager.startJob(jobId, async (id, onEvent) => {
+    const inp = typeof job.input === 'string' ? JSON.parse(job.input||'{}') : (job.input||{});return agentRunner.runAgent(job.agent_id, inp, job.project_id, id, onEvent);
+  });
+  const handler = (data) => {
+    if (data.jobId === jobId) send(data.event, data.data);
+  };
   jobManager.emitter.on('job:event', handler);
+  jobManager.emitter.on('job:update', (data) => {
+    if (data.id === jobId) {
+      if (data.status === 'completed') send('complete', { message: 'Done' });
+      if (data.status === 'failed') send('error', { message: data.error || 'Failed' });
+    }
+  });
   req.on('close', () => jobManager.emitter.off('job:event', handler));
 });
 
@@ -478,5 +488,7 @@ server.listen(PORT, () => {
 });
 
 module.exports = { app, server };
+
+
 
 

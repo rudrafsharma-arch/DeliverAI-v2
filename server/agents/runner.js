@@ -1,4 +1,4 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const path = require('path');
 const { callAI } = require('../core/ai-engine');
 const context = require('../core/context');
@@ -91,7 +91,12 @@ function buildPrompt(agent, formData, projectContext) {
   if (formData.client) prompt += `Client: ${formData.client}\n`;
   if (formData.processName) prompt += `Process: ${formData.processName}\n`;
   if (formData.description) prompt += `\nDescription:\n${formData.description}\n`;
-  if (Object.keys(projectContext).length > 0) {
+  if (formData.uploadedFile) {
+    prompt += '\n\n--- ATTACHED FILE: ' + formData.uploadedFile.name + ' ---\n';
+    prompt += formData.uploadedFile.content ? formData.uploadedFile.content.substring(0, 3000) : '(binary file)';
+    prompt += '\n--- END FILE ---\n';
+  }
+    if (Object.keys(projectContext).length > 0) {
     prompt += `\nExisting project context (from other agents):\n`;
     for (const [key, val] of Object.entries(projectContext)) {
       if (val?.summary) prompt += `${key}: ${val.summary}\n`;
