@@ -416,5 +416,93 @@
     "metadata": "{}",
     "created_at": "2026-10-26T16:09:04.310Z",
     "updated_at": "2026-10-26T16:09:04.311Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "server",
+    "message": "DeliverAI v2 running on port 3005",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:14:27.541Z",
+    "updated_at": "2026-10-26T16:14:27.547Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "server",
+    "message": "AI Engine: groq",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:14:27.550Z",
+    "updated_at": "2026-10-26T16:14:27.550Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client connected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:14:29.198Z",
+    "updated_at": "2026-10-26T16:14:29.199Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "websocket",
+    "message": "WebSocket client connected",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:14:30.078Z",
+    "updated_at": "2026-10-26T16:14:30.078Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "architect",
+    "message": "Architect: HI",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:14:48.407Z",
+    "updated_at": "2026-10-26T16:14:48.407Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "ai-engine",
+    "message": "Calling AI engine: groq",
+    "metadata": "{\"engine\":\"groq\"}",
+    "created_at": "2026-10-26T16:14:48.409Z",
+    "updated_at": "2026-10-26T16:14:48.410Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "architect",
+    "message": "Architect chat: HI",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:14:48.864Z",
+    "updated_at": "2026-10-26T16:14:48.865Z"
+  },
+  {
+    "job_id": null,
+    "project_id": null,
+    "agent_id": null,
+    "level": "info",
+    "category": "btp-connector",
+    "message": "BTP access token expired - refreshing...",
+    "metadata": "{}",
+    "created_at": "2026-10-26T16:15:55.263Z",
+    "updated_at": "2026-10-26T16:15:55.264Z"
   }
 ]

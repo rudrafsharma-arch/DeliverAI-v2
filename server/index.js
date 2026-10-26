@@ -307,17 +307,14 @@ app.post('/api/documents/:id/refine', async (req, res) => {
 
 // â”€â”€ Architect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.post('/api/architect/chat', async (req, res) => {
-  const send = sseSetup(req, res);
   const { message, projectId, history } = req.body;
   try {
-    send('status', { message: 'Architect thinking...' });
-    const response = await architect.chat(message, projectId, history || []);
-    send('complete', { message: response });
     logger.info(`Architect chat: ${message.substring(0, 50)}`, { projectId, category: 'architect' });
+    const response = await architect.chat(message, projectId, history || []);
+    res.json({ message: response });
   } catch(e) {
-    send('error', { message: e.message });
+    res.status(500).json({ error: e.message });
   }
-  res.end();
 });
 
 app.post('/api/architect/plan', async (req, res) => {

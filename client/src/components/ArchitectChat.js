@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import { api } from '../api';
 
 const BLUE = '#0070F2';
@@ -50,10 +50,10 @@ export default function ArchitectChat({ project, questions, setQuestions }) {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Header */}
       <div style={{ padding: '12px 16px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc', display: 'flex', alignItems: 'center', gap: 8 }}>
-        <div style={{ width: 28, height: 28, background: BLUE, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>🤖</div>
+        <div style={{ width: 28, height: 28, background: BLUE, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>ðŸ¤–</div>
         <div>
           <div style={{ fontWeight: 700, fontSize: 13 }}>Architect</div>
-          <div style={{ fontSize: 10, color: '#94a3b8' }}>Always on • {project ? project.name : 'No project'}</div>
+          <div style={{ fontSize: 10, color: '#94a3b8' }}>Always on â€¢ {project ? project.name : 'No project'}</div>
         </div>
         <div style={{ marginLeft: 'auto', width: 8, height: 8, borderRadius: '50%', background: '#16a34a' }} />
       </div>
@@ -64,7 +64,7 @@ export default function ArchitectChat({ project, questions, setQuestions }) {
           {questions.map(q => (
             <div key={q.id} style={{ marginBottom: 10 }}>
               <div style={{ fontSize: 12, fontWeight: 600, color: '#92400e', marginBottom: 6 }}>
-                ❓ {q.agentId}: {q.question}
+                â“ {q.agentId}: {q.question}
               </div>
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {(q.options || []).map(opt => (
@@ -92,11 +92,11 @@ export default function ArchitectChat({ project, questions, setQuestions }) {
               border: m.role === 'user' ? 'none' : '1px solid #e2e8f0',
               fontStyle: m.role === 'architect-thinking' ? 'italic' : 'normal'
             }}>
-              {m.role === 'architect-thinking' ? `⌛ ${m.content}` : m.content}
+              {m.role === 'architect-thinking' ? `âŒ› ${m.content}` : m.content}
             </div>
           </div>
         ))}
-        {loading && <div style={{ fontSize: 11, color: '#94a3b8', padding: '4px 0' }}>⌛ Architect thinking...</div>}
+        {loading && <div style={{ fontSize: 11, color: '#94a3b8', padding: '4px 0' }}>âŒ› Architect thinking...</div>}
         <div ref={bottomRef} />
       </div>
 
@@ -107,9 +107,10 @@ export default function ArchitectChat({ project, questions, setQuestions }) {
           style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 13, outline: 'none' }} />
         <button onClick={send} disabled={loading || !input.trim()}
           style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: BLUE, color: '#fff', cursor: 'pointer', fontWeight: 600, fontSize: 13, opacity: (!input.trim() || loading) ? 0.5 : 1 }}>
-          ↑
+          â†‘
         </button>
       </div>
     </div>
   );
 }
+
